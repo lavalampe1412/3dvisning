@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3D Utleieskann — Bestill</title>
+    <meta name="description" content="Bestill 3D-skanning og plantegning for utleieboliger, hytter og næring." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* Samme base som index/tjenester/priser/FAQ */
+      :root{
+        /* Farger */
+        --bg: #ffffff;
+        --panel: #f9fafc;
+        --line: rgba(0,0,0,.08);
+        --text: #111315;
+        --muted: #6e7480;
+        --accent: #0ea5e9;
+        --accent-2: #8b5cf6;
+        --accent-soft: #e0f7ff;
+        --accent-dark: #0284c7;
+
+        /* Typografi */
+        --fs-base: clamp(14px, 0.95vw + 0.55rem, 18px);
+        --fs-sm: clamp(12px, 0.45vw + 0.55rem, 14px);
+        --fs-md: clamp(13px, 0.6vw + 0.6rem, 16px);
+        --fs-lg: clamp(18px, 1.1vw + 0.6rem, 24px);
+        --fs-xl: clamp(22px, 1.4vw + 0.6rem, 32px);
+
+        /* Spacing */
+        --s-1: clamp(6px, 0.6vw, 12px);
+        --s-2: clamp(10px, 0.9vw, 16px);
+        --s-3: clamp(14px, 1.2vw, 22px);
+        --s-4: clamp(18px, 1.8vw, 28px);
+        --s-5: clamp(24px, 2.6vw, 44px);
+
+        /* Radius + skygge */
+        --radius: clamp(14px, 1.4vw, 22px);
+        --shadow: 0 6px 16px rgba(0,0,0,.08);
+
+        /* Containerbredde */
+        --container-w: min(98vw, 1600px);
+      }
+
+      *{box-sizing:border-box;margin:0;padding:0;}
+      html{ font-size: var(--fs-base); }
+      html,body{height:100%;}
+      body{
+        font-family:"Manrope",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        background:linear-gradient(180deg,#fff,#f3f5f8);
+        color:var(--text);
+        -webkit-font-smoothing:antialiased;
+        text-rendering:optimizeLegibility;
+      }
+
+      a{text-decoration:none;color:inherit;}
+
+      .container{
+        width: var(--container-w);
+        margin:0 auto;
+        padding:0 var(--s-2);
+      }
+
+      /* Top-meny – identisk stil som FAQ */
+      .topbar{
+        position:sticky;
+        top:0;
+        z-index:20;
+        backdrop-filter:blur(16px);
+        background:rgba(244,247,251,0.9);
+        border-bottom:1px solid rgba(209,213,219,0.6);
+      }
+
+      .topbar-inner{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:var(--s-2);
+        padding:var(--s-2) var(--s-2);
+      }
+
+      .logo{
+        font-family:"Sora",system-ui,sans-serif;
+        font-weight:700;
+        letter-spacing:0.02em;
+        font-size:1.1rem;
+      }
+
+      .logo span{
+        font-weight:800;
+        color:var(--accent);
+      }
+
+      .nav{
+        display:flex;
+        align-items:center;
+        gap:var(--s-3);
+        font-size:0.95rem;
+      }
+
+      .nav a{
+        color:var(--muted);
+        font-weight:500;
+        padding:0.4rem 0.2rem;
+        border-radius:999px;
+        transition:color .18s ease, background .18s ease;
+      }
+
+      .nav a:hover{
+        color:var(--text);
+        background:rgba(255,255,255,0.6);
+      }
+
+      .nav a.active{
+        color:var(--accent-dark);
+        background:var(--accent-soft);
+      }
+
+      .nav-cta{
+        padding:0.45rem 0.9rem;
+        border-radius:999px;
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        color:#fff !important;
+        box-shadow:0 8px 18px rgba(37,99,235,0.35);
+        font-weight:700;
+        font-size:var(--fs-sm);
+      }
+
+      @media (max-width:900px){
+        .topbar-inner{
+          padding-inline:0;
+        }
+      }
+
+      main{
+        padding:var(--s-4) 0 var(--s-5);
+      }
+
+      /* --- CHECKOUT-STIL --- */
+
+      .page-intro{
+        margin-bottom:var(--s-4);
+        max-width:60ch;
+      }
+
+      .eyebrow{
+        font-size:0.8rem;
+        text-transform:uppercase;
+        letter-spacing:0.16em;
+        color:var(--accent-dark);
+        font-weight:700;
+        margin-bottom:var(--s-2);
+      }
+
+      h1{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-xl);
+        margin-bottom:var(--s-2);
+      }
+
+      .intro-text{
+        color:var(--muted);
+        max-width:48rem;
+        line-height:1.5;
+        font-size:var(--fs-md);
+      }
+
+      .chips{
+        display:flex;
+        flex-wrap:wrap;
+        gap:0.4rem;
+        margin-top:var(--s-2);
+      }
+
+      .chip{
+        font-size:var(--fs-sm);
+        padding:0.25rem 0.7rem;
+        border-radius:999px;
+        background:var(--accent-soft);
+        color:var(--accent-dark);
+        border:1px solid rgba(14,165,233,0.18);
+        font-weight:500;
+      }
+
+      .checkout-shell{
+        display:grid;
+        grid-template-columns:minmax(0, 1.1fr) minmax(0, 1.3fr);
+        gap:var(--s-3);
+        align-items:flex-start;
+      }
+
+      @media (max-width:980px){
+        .checkout-shell{
+          grid-template-columns:1fr;
+        }
+      }
+
+      .panel{
+        background:#fff;
+        border-radius:var(--radius);
+        border:1px solid var(--line);
+        box-shadow:var(--shadow);
+        padding:var(--s-3);
+      }
+
+      .panel h2{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-lg);
+        margin-bottom:var(--s-2);
+      }
+
+      .panel p{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      /* Pakkevalg i skjemaet */
+
+      .group-label{
+        font-size:var(--fs-sm);
+        font-weight:600;
+        color:var(--muted);
+        margin-bottom:0.3rem;
+      }
+
+      .summary-packages{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-2);
+        margin-bottom:var(--s-3);
+      }
+
+      .pkg{
+        border-radius:var(--radius);
+        border:1px solid var(--line);
+        padding:var(--s-2);
+        display:flex;
+        gap:var(--s-2);
+        align-items:flex-start;
+        cursor:pointer;
+        position:relative;
+        background:#fff;
+        transition:border-color .18s ease, box-shadow .18s ease, transform .05s ease;
+      }
+
+      .pkg:hover{
+        border-color:rgba(14,165,233,0.5);
+        box-shadow:0 8px 18px rgba(148,163,184,0.4);
+      }
+
+      .pkg input{
+        position:absolute;
+        inset:0;
+        opacity:0;
+        cursor:pointer;
+      }
+
+      .pkg-main{
+        display:flex;
+        flex-direction:column;
+        gap:0.2rem;
+        flex:1;
+      }
+
+      .pkg-name{
+        font-size:var(--fs-md);
+        font-weight:600;
+      }
+
+      .pkg-note{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .pkg-price{
+        font-size:var(--fs-md);
+        font-weight:700;
+        white-space:nowrap;
+      }
+
+      .pkg-tag{
+        display:inline-flex;
+        align-items:center;
+        gap:0.25rem;
+        font-size:var(--fs-sm);
+        padding:0.15rem 0.6rem;
+        border-radius:999px;
+        background:var(--accent-soft);
+        color:var(--accent-dark);
+        margin-top:0.2rem;
+      }
+
+      .pkg-selected{
+        border-color:var(--accent-dark);
+        box-shadow:0 0 0 1px rgba(14,165,233,0.36);
+      }
+
+      /* Skjema */
+
+      form{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-2);
+      }
+
+      .field-row{
+        display:flex;
+        gap:var(--s-2);
+        flex-wrap:wrap;
+      }
+
+      .field{
+        flex:1 1 min(16rem,100%);
+        display:flex;
+        flex-direction:column;
+        gap:0.25rem;
+      }
+
+      label{
+        font-size:var(--fs-sm);
+        font-weight:600;
+        color:var(--muted);
+      }
+
+      .input, select, textarea{
+        border-radius:12px;
+        border:1px solid var(--line);
+        padding:0.5rem 0.75rem;
+        font:inherit;
+        background:#fff;
+        outline:none;
+        transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      }
+
+      .input:focus,
+      select:focus,
+      textarea:focus{
+        border-color:var(--accent-dark);
+        box-shadow:0 0 0 1px rgba(14,165,233,0.4);
+      }
+
+      textarea{
+        resize:vertical;
+        min-height:80px;
+      }
+
+      .terms{
+        display:flex;
+        align-items:flex-start;
+        gap:0.45rem;
+        font-size:var(--fs-sm);
+        color:var(--muted);
+        margin-top:var(--s-1);
+      }
+
+      .terms input{
+        margin-top:0.2rem;
+      }
+
+      .fine-print{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+        margin-top:var(--s-1);
+      }
+
+      .btn-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap:var(--s-2);
+        align-items:center;
+        margin-top:var(--s-2);
+      }
+
+      .btn-primary{
+        border:none;
+        border-radius:999px;
+        padding:0.55rem 1.4rem;
+        font-weight:700;
+        font-size:var(--fs-sm);
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        color:#fff;
+        cursor:pointer;
+        box-shadow:0 8px 18px rgba(37,99,235,0.35);
+      }
+
+      .btn-primary:hover{
+        filter:brightness(1.03);
+      }
+
+      .btn-ghost{
+        border-radius:999px;
+        padding:0.5rem 1.2rem;
+        border:1px solid var(--line);
+        font-size:var(--fs-sm);
+        background:#fff;
+        cursor:pointer;
+        color:var(--muted);
+      }
+
+      .btn-ghost:hover{
+        background:rgba(249,250,251,0.8);
+      }
+
+      .footer-note{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+        margin-top:var(--s-2);
+        text-align:right;
+      }
+
+      @media (max-width:700px){
+        .footer-note{
+          text-align:left;
+        }
+      }
+
+      footer{
+        border-top:1px solid var(--line);
+        padding:var(--s-3) 0 var(--s-3);
+        font-size:var(--fs-sm);
+        color:var(--muted);
+        text-align:center;
+        margin-top:var(--s-5);
+      }
+
+      @media (prefers-reduced-motion: reduce){
+        *{transition:none !important; scroll-behavior:auto}
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- TOPBAR: identisk struktur som i bestill-skriptet -->
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="index.html" class="logo">
+          <span>Prop</span>Scan
+        </a>
+        <nav class="nav">
+          <a href="index.html">Hjem</a>
+          <a href="tjenester.html">Tjenester</a>
+          <a href="priser.html">Priser</a>
+          <a href="faq.html" class="active">FAQ</a>
+          <a href="bestill.html" class="nav-cta">Bestill</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Intro / heading -->
+      <section class="page-intro">
+        <div class="eyebrow">Bestilling</div>
+        <h1>Bestill 3D-skann</h1>
+        <p class="intro-text">
+          Fyll inn informasjonen under for å bekrefte bestilling. Du betaler først når du har fått levert ferdig 3D-omvisning
+          (og plantegning hvis valgt). Faktura sendes med 7 dagers betalingsfrist.
+        </p>
+        <div class="chips">
+          <span class="chip">Ingen forhåndsbetaling</span>
+          <span class="chip">Faktura etter levering</span>
+          <span class="chip">Fast pris inkl. mva</span>
+        </div>
+      </section>
+
+      <!-- Checkout: venstre info, høyre skjema -->
+      <section class="checkout-shell" id="kontakt">
+        <!-- Venstre: betalingsinfo -->
+        <aside class="panel">
+          <h2>Hvordan fungerer betalingen?</h2>
+          <p>
+            Du bestiller nå, jeg bekrefter tidspunkt, kommer og skanner – og du får faktura etter at du har fått levert 3D-omvisningen
+            (og plantegning om du har valgt det).
+          </p>
+          <br/>
+          <p>
+            Vanlig pris for en normal bolig ligger mellom <strong>kr 2 490–2 990,-</strong> inkl. mva.
+            Næring og større bygg avtales separat.
+          </p>
+          <br/>
+          <p>
+            <strong>Avbestilling:</strong> Ved avbestilling senere enn 24 timer før avtalt tid kan et gebyr på kr 500,- faktureres.
+          </p>
+        </aside>
+
+        <!-- Høyre: bestillingsskjema -->
+        <section class="panel">
+          <h2>Fullfør bestilling</h2>
+
+          <!-- TODO: bytt action="#" til Formspree / backend / e-postgateway -->
+          <form method="post" action="#">
+            <!-- hidden felt for valgt pakke -->
+            <input type="hidden" name="pakke_valgt" id="pakke_valgt" value="standard" />
+
+            <!-- Pakkevalg -->
+            <div>
+              <div class="group-label">Velg pakke</div>
+              <div class="summary-packages">
+                <label class="pkg pkg-selected">
+                  <input type="radio" name="pakke" value="standard" checked />
+                  <div class="pkg-main">
+                    <div class="pkg-name">Standard skann</div>
+                    <div class="pkg-note">3D-omvisning for FINN, Airbnb og egen nettside.</div>
+                    <span class="pkg-tag">Mest valgt</span>
+                  </div>
+                  <div class="pkg-price">kr 2 490,-</div>
+                </label>
+
+                <label class="pkg">
+                  <input type="radio" name="pakke" value="skann-plan" />
+                  <div class="pkg-main">
+                    <div class="pkg-name">Skann + plantegning</div>
+                    <div class="pkg-note">3D-omvisning + målsatt plantegning med romnavn.</div>
+                  </div>
+                  <div class="pkg-price">kr 2 990,-</div>
+                </label>
+
+                <label class="pkg">
+                  <input type="radio" name="pakke" value="naring" />
+                  <div class="pkg-main">
+                    <div class="pkg-name">Næring / større bygg</div>
+                    <div class="pkg-note">Tilpasset pris etter areal, lokasjon og kompleksitet.</div>
+                  </div>
+                  <div class="pkg-price">Fra kr 4 990,-</div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Adresse -->
+            <div>
+              <div class="group-label">Adresse for skanning</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="adresse">Adresse</label>
+                  <input class="input" type="text" id="adresse" name="adresse" required />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="postnr">Postnummer</label>
+                  <input class="input" type="text" id="postnr" name="postnr" inputmode="numeric" />
+                </div>
+                <div class="field">
+                  <label for="sted">Sted</label>
+                  <input class="input" type="text" id="sted" name="sted" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Bolig / objekt -->
+            <div>
+              <div class="group-label">Bolig / objekt</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="boligtype">Boligtype</label>
+                  <select class="input" id="boligtype" name="boligtype">
+                    <option>Leilighet</option>
+                    <option>Rekkehus / tomannsbolig</option>
+                    <option>Enebolig</option>
+                    <option>Hytte</option>
+                    <option>Næring / kontor</option>
+                    <option>Annet</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="areal">Ca. areal (m²)</label>
+                  <input class="input" type="number" id="areal" name="areal" min="0" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tidspunkt -->
+            <div>
+              <div class="group-label">Tidspunkt</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="dato">Ønsket dato</label>
+                  <input class="input" type="date" id="dato" name="onsket_dato" />
+                </div>
+                <div class="field">
+                  <label for="tid">Tidspunkt / fleksibilitet</label>
+                  <input class="input" type="text" id="tid" name="tid"
+                         placeholder="F.eks. formiddag, ettermiddag, helg" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Kontaktinfo -->
+            <div>
+              <div class="group-label">Kontaktinformasjon</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="navn">Navn</label>
+                  <input class="input" type="text" id="navn" name="navn" required />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="epost">E-post</label>
+                  <input class="input" type="email" id="epost" name="epost" required />
+                </div>
+                <div class="field">
+                  <label for="telefon">Telefon</label>
+                  <input class="input" type="tel" id="telefon" name="telefon" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tilleggsinfo -->
+            <div>
+              <div class="group-label">Tilleggsinformasjon</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="notat">Nøkkelinfo, parkering, portkode m.m.</label>
+                  <textarea class="input" id="notat" name="notat"
+                            placeholder="F.eks. hvor jeg kan parkere, ringeklokke, kontaktperson på stedet osv."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vilkår -->
+            <div class="terms">
+              <input type="checkbox" id="vilkar" name="vilkar" required />
+              <label for="vilkar">
+                Jeg bekrefter bestilling av 3D-skann, og er innforstått med at det sendes faktura etter levering
+                med 7 dagers betalingsfrist. Avbestilling senere enn 24 timer før avtalt tid kan faktureres med kr 500,-.
+              </label>
+            </div>
+
+            <div class="fine-print">
+              Du får alltid en egen bekreftelse på e-post/SMS med endelig tidspunkt før jeg kommer.
+            </div>
+
+            <div class="btn-row">
+              <button type="submit" class="btn-primary">Bekreft bestilling</button>
+              <button type="button" class="btn-ghost" onclick="window.location.href='tel:+4700000000';">
+                Spørsmål? Ring meg
+              </button>
+            </div>
+
+            <div class="footer-note">
+              Du får normalt svar innen én virkedag.
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <footer>
+      © 2025 3D Utleieskann. Alle rettigheter reservert.
+    </footer>
+
+    <script>
+      // Gjør pakke-kortene klikkbare og oppdater hidden felt
+      const packageRadios = document.querySelectorAll('.summary-packages .pkg input[type="radio"]');
+      const hiddenPakke = document.getElementById('pakke_valgt');
+
+      packageRadios.forEach((input) => {
+        input.addEventListener('change', () => {
+          document.querySelectorAll('.summary-packages .pkg').forEach(pkg => {
+            pkg.classList.remove('pkg-selected');
+          });
+          input.closest('.pkg').classList.add('pkg-selected');
+
+          if (hiddenPakke) {
+            hiddenPakke.value = input.value;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

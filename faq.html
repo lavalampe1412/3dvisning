@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Propscan — FAQ</title>
+    <meta name="description" content="Ofte stilte spørsmål om 3D-skanning, plantegninger og levering." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* Samme base som index/tjenester/priser/FAQ */
+      :root{
+        /* Farger */
+        --bg: #ffffff;
+        --panel: #f9fafc;
+        --line: rgba(0,0,0,.08);
+        --text: #111315;
+        --muted: #6e7480;
+        --accent: #0ea5e9;
+        --accent-2: #8b5cf6;
+        --accent-soft: #e0f7ff;
+        --accent-dark: #0284c7;
+
+        /* Typografi */
+        --fs-base: clamp(14px, 0.95vw + 0.55rem, 18px);
+        --fs-sm: clamp(12px, 0.45vw + 0.55rem, 14px);
+        --fs-md: clamp(13px, 0.6vw + 0.6rem, 16px);
+        --fs-lg: clamp(18px, 1.1vw + 0.6rem, 24px);
+        --fs-xl: clamp(22px, 1.4vw + 0.6rem, 32px);
+
+        /* Spacing */
+        --s-1: clamp(6px, 0.6vw, 12px);
+        --s-2: clamp(10px, 0.9vw, 16px);
+        --s-3: clamp(14px, 1.2vw, 22px);
+        --s-4: clamp(18px, 1.8vw, 28px);
+        --s-5: clamp(24px, 2.6vw, 44px);
+
+        /* Radius + skygge */
+        --radius: clamp(14px, 1.4vw, 22px);
+        --shadow: 0 6px 16px rgba(0,0,0,.08);
+
+        /* Containerbredde */
+        --container-w: min(98vw, 1600px);
+      }
+
+      *{box-sizing:border-box;margin:0;padding:0;}
+      html{ font-size: var(--fs-base); }
+      html,body{height:100%;}
+      body{
+        font-family:"Manrope",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        background:linear-gradient(180deg,#fff,#f3f5f8);
+        color:var(--text);
+        -webkit-font-smoothing:antialiased;
+        text-rendering:optimizeLegibility;
+      }
+
+      a{text-decoration:none;color:inherit;}
+
+      .container{
+        width: var(--container-w);
+        margin:0 auto;
+        padding:0 var(--s-2);
+      }
+
+      /* Top-meny – identisk stil som bestill-siden */
+      .topbar{
+        position:sticky;
+        top:0;
+        z-index:20;
+        backdrop-filter:blur(16px);
+        background:rgba(244,247,251,0.9);
+        border-bottom:1px solid rgba(209,213,219,0.6);
+      }
+
+      .topbar-inner{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:var(--s-2);
+        padding:var(--s-2) var(--s-2);
+      }
+
+      .logo{
+        font-family:"Sora",system-ui,sans-serif;
+        font-weight:700;
+        letter-spacing:0.02em;
+        font-size:1.1rem;
+      }
+
+      .logo span{
+        font-weight:800;
+        color:var(--accent);
+      }
+
+      .nav{
+        display:flex;
+        align-items:center;
+        gap:var(--s-3);
+        font-size:0.95rem;
+      }
+
+      .nav a{
+        color:var(--muted);
+        font-weight:500;
+        padding:0.4rem 0.2rem;
+        border-radius:999px;
+        transition:color .18s ease, background .18s ease;
+      }
+
+      .nav a:hover{
+        color:var(--text);
+        background:rgba(255,255,255,0.6);
+      }
+
+      .nav a.active{
+        color:var(--accent-dark);
+        background:var(--accent-soft);
+      }
+
+      .nav-cta{
+        padding:0.45rem 0.9rem;
+        border-radius:999px;
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        color:#fff !important;
+        box-shadow:0 8px 18px rgba(37,99,235,0.35);
+        font-weight:700;
+        font-size:var(--fs-sm);
+      }
+
+      @media (max-width:900px){
+        .topbar-inner{
+          padding-inline:0;
+        }
+      }
+
+      main{
+        padding:var(--s-4) 0 var(--s-5);
+      }
+
+      /* FAQ-spesifikt */
+
+      .page-intro{
+        margin-bottom:var(--s-4);
+        max-width:60ch;
+      }
+
+      .eyebrow{
+        font-size:0.8rem;
+        text-transform:uppercase;
+        letter-spacing:0.16em;
+        color:var(--accent-dark);
+        font-weight:700;
+        margin-bottom:var(--s-2);
+      }
+
+      h1{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-xl);
+        margin-bottom:var(--s-2);
+      }
+
+      .intro-text{
+        color:var(--muted);
+        max-width:48rem;
+        line-height:1.5;
+        font-size:var(--fs-md);
+      }
+
+      .faq-layout{
+        display:grid;
+        grid-template-columns:minmax(0, 1.1fr) minmax(0, 1.1fr);
+        gap:var(--s-3);
+        align-items:flex-start;
+      }
+
+      @media (max-width:980px){
+        .faq-layout{
+          grid-template-columns:1fr;
+        }
+      }
+
+      .panel{
+        background:#fff;
+        border-radius:var(--radius);
+        border:1px solid var(--line);
+        box-shadow:var(--shadow);
+        padding:var(--s-3);
+      }
+
+      .panel h2{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-lg);
+        margin-bottom:var(--s-2);
+      }
+
+      .faq-list{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-2);
+      }
+
+      .faq-item{
+        border-radius:var(--radius);
+        border:1px solid rgba(148,163,184,0.4);
+        padding:var(--s-2);
+        background:#f9fafb;
+        cursor:pointer;
+        transition:border-color .16s ease, background .16s ease, box-shadow .16s ease;
+      }
+
+      .faq-item:hover{
+        border-color:var(--accent-dark);
+        background:#fff;
+        box-shadow:0 6px 14px rgba(15,23,42,0.12);
+      }
+
+      .faq-q{
+        font-weight:600;
+        font-size:var(--fs-md);
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:var(--s-1);
+      }
+
+      .faq-toggle{
+        font-size:0.9rem;
+        color:var(--muted);
+      }
+
+      .faq-a{
+        margin-top:0.45rem;
+        font-size:var(--fs-sm);
+        color:var(--muted);
+        line-height:1.5;
+        display:none;
+      }
+
+      .faq-item.open .faq-a{
+        display:block;
+      }
+
+      .faq-item.open .faq-toggle{
+        transform:rotate(90deg);
+      }
+
+      .contact-panel{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .contact-panel strong{
+        color:var(--text);
+      }
+
+      .contact-chip{
+        display:inline-flex;
+        align-items:center;
+        padding:0.35rem 0.8rem;
+        border-radius:999px;
+        background:var(--accent-soft);
+        color:var(--accent-dark);
+        font-size:var(--fs-sm);
+        margin-top:var(--s-1);
+      }
+
+      .contact-panel ul{
+        list-style:none;
+        margin-top:var(--s-2);
+        display:flex;
+        flex-direction:column;
+        gap:0.4rem;
+      }
+
+      .contact-panel li{
+        display:flex;
+        justify-content:space-between;
+        gap:var(--s-1);
+      }
+
+      .contact-label{
+        color:var(--muted);
+      }
+
+      .contact-value{
+        font-weight:600;
+      }
+
+      footer{
+        border-top:1px solid var(--line);
+        padding:var(--s-3) 0 var(--s-3);
+        font-size:var(--fs-sm);
+        color:var(--muted);
+        text-align:center;
+        margin-top:var(--s-5);
+      }
+
+      @media (prefers-reduced-motion: reduce){
+        *{transition:none !important; scroll-behavior:auto}
+      }
+    </style>
+
+    <script>
+      // Enkel FAQ-toggle
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".faq-item").forEach(item => {
+          item.addEventListener("click", () => {
+            item.classList.toggle("open");
+          });
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <!-- TOPBAR: identisk struktur som i bestill-skriptet -->
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="index.html" class="logo">
+          <span>Prop</span>Scan
+        </a>
+        <nav class="nav">
+          <a href="index.html">Hjem</a>
+          <a href="tjenester.html">Tjenester</a>
+          <a href="priser.html">Priser</a>
+          <a href="faq.html" class="active">FAQ</a>
+          <a href="bestill.html" class="nav-cta">Bestill</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="page-intro">
+          <div class="eyebrow">FAQ</div>
+          <h1>Ofte stilte spørsmål</h1>
+          <p class="intro-text">
+            Her finner du svar på de vanligste spørsmålene om 3D-skanning, plantegninger og levering.
+            Finner du ikke det du lurer på, er det bare å ta kontakt.
+          </p>
+        </section>
+
+        <section class="faq-layout">
+          <div class="panel">
+            <h2>Om skanning og gjennomføring</h2>
+            <div class="faq-list">
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Hvor lang tid tar en skanning?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  En vanlig leilighet (30–80 m²) tar typisk 20–45 minutter å skanne. større boliger og
+                  hytter kan ta litt lenger tid, men alt gjøres i én økt.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Må jeg rydde før dere kommer?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Ja, det anbefales. Skanningen viser boligen akkurat slik den er i virkeligheten. En
+                  rask rydding, rette opp puter og fjerne rot gjør at annonsen ser mye bedre ut.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Er dere nødt til å gå inn i alle rom?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Nei. Vi kan hoppe over rom du ikke vil ha med (f.eks. bod, teknisk rom eller soverom),
+                  men for planløsningens del er det en fordel å ha med mest mulig av boligen.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Påvirker 3D-skanningen noe i boligen?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Nei. Skanningen er helt passiv – bare kamera på stativ som går rundt i boligen. Det er
+                  ingen inngrep, ingen sensorer som blir stående igjen og ingenting kobles til strømmen.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Levering, bruk og pris</h2>
+            <div class="faq-list">
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Når får jeg ferdig 3D-tur og plantegning?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Vanlig leveringstid er innen 24 timer etter skanning. Ved behov kan vi ofte levere
+                  raskere – gi gjerne beskjed hvis det haster.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Kan jeg bruke 3D-turen på FINN og Airbnb?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Ja. Du får en lenke som enkelt kan legges inn i FINN-annonsen, på Airbnb og på egen
+                  nettside. 3D-turen fungerer både på mobil og PC.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Er plantegning inkludert i prisen?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Ja, plantegning er inkludert i standardpakken. Du får en oversiktlig plan med romnavn
+                  og mål, perfekt til prospekter og annonser.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Hvordan fungerer betaling?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Du får faktura etter gjennomført skanning og levering. For privatpersoner kan vi også
+                  avtale Vipps etter nærmere avtale.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-q">
+                  <span>Hva hvis jeg må endre eller avbestille?</span>
+                  <span class="faq-toggle">›</span>
+                </div>
+                <div class="faq-a">
+                  Tidspunkt kan endres kostnadsfritt inntil 24 timer før avtalt skanning. Ved avbestilling
+                  tett opp mot avtalt tid kan det tilkomme et lite gebyr for holdt av tid/reise.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Enkel kontaktseksjon så CTA-lenker gir mening hvis du vil bruke den her også -->
+        <section id="kontakt" style="margin-top:var(--s-4);">
+          <div class="panel contact-panel">
+            <h2>Fortsatt spørsmål?</h2>
+            <p>
+              Ta kontakt, så finner vi ut hva som passer best for boligen din.  
+              <br />
+              <span class="contact-chip">Uforpliktende å spørre</span>
+            </p>
+
+            <ul>
+              <li>
+                <span class="contact-label">E-post</span>
+                <span class="contact-value">post@propscan.no</span>
+              </li>
+              <li>
+                <span class="contact-label">Telefon</span>
+                <span class="contact-value">+47 00 00 00 00</span>
+              </li>
+              <li>
+                <span class="contact-label">Område</span>
+                <span class="contact-value">Oslo og omegn (andre områder etter avtale)</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer>
+      © Propscan — 3D-omvisning og plantegninger for utleie, hytter og næring.
+    </footer>
+  </body>
+</html>

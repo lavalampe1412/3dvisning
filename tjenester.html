@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Propscan — Live Omvisning</title>
+    <meta name="description" content="Opplev realistiske 3D-omvisninger og plantegninger for utleieboliger." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* =============================
+         FLUID SKALERING
+      ============================== */
+      :root{
+        /* Farger */
+        --bg: #ffffff;
+        --panel: #f9fafc;
+        --line: rgba(0,0,0,.08);
+        --text: #111315;
+        --muted: #6e7480;
+        --accent: #0ea5e9;
+        --accent-2: #8b5cf6;
+        --accent-soft: #e0f7ff;
+        --accent-dark: #0284c7;
+
+        /* Fluid type */
+        --fs-base: clamp(14px, 0.95vw + 0.55rem, 18px);
+        --fs-sm: clamp(12px, 0.45vw + 0.55rem, 14px);
+        --fs-md: clamp(13px, 0.6vw + 0.6rem, 16px);
+        --fs-lg: clamp(18px, 1.1vw + 0.6rem, 24px);
+        --fs-xl: clamp(22px, 1.4vw + 0.6rem, 32px);
+
+        /* Spacing */
+        --s-1: clamp(6px, 0.6vw, 12px);
+        --s-2: clamp(10px, 0.9vw, 16px);
+        --s-3: clamp(14px, 1.2vw, 22px);
+        --s-4: clamp(18px, 1.8vw, 28px);
+        --s-5: clamp(24px, 2.6vw, 44px);
+
+        /* Radius + skygge */
+        --radius: clamp(14px, 1.4vw, 22px);
+        --shadow: 0 6px 16px rgba(0,0,0,.08);
+
+        /* Containerbredde */
+        --container-w: min(98vw, 1600px);
+      }
+
+      *{box-sizing:border-box}
+      html{ font-size: var(--fs-base); }
+      html,body{ height:100% }
+      body{
+        margin:0;
+        font-family:Manrope, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color:var(--text);
+        background:linear-gradient(180deg,#fff,#f3f5f8);
+        -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      }
+      h1,h2,h3{font-family:Sora,Manrope,sans-serif}
+      a{text-decoration:none;color:inherit}
+      .container{ width: var(--container-w); margin: 0 auto; padding: var(--s-2); }
+
+      /* NY TOPPMENY (samme som index/priser/faq) */
+      .topbar{
+        position:sticky;
+        top:0;
+        z-index:20;
+        backdrop-filter:blur(16px);
+        background:rgba(244,247,251,0.9);
+        border-bottom:1px solid rgba(209,213,219,0.6);
+      }
+
+      .topbar-inner{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:var(--s-2);
+        padding:var(--s-2) var(--s-2);
+      }
+
+      .logo{
+        font-family:"Sora",system-ui,sans-serif;
+        font-weight:700;
+        letter-spacing:0.02em;
+        font-size:1.1rem;
+      }
+
+      .logo span{
+        font-weight:800;
+        color:var(--accent);
+      }
+
+      .nav{
+        display:flex;
+        align-items:center;
+        gap:var(--s-3);
+        font-size:0.95rem;
+      }
+
+      .nav a{
+        color:var(--muted);
+        font-weight:500;
+        padding:0.4rem 0.2rem;
+        border-radius:999px;
+        transition:color .18s ease, background .18s ease;
+      }
+
+      .nav a:hover{
+        color:var(--text);
+        background:rgba(255,255,255,0.6);
+      }
+
+      .nav a.active{
+        color:var(--accent-dark);
+        background:var(--accent-soft);
+      }
+
+      .nav-cta{
+        padding:0.45rem 0.9rem;
+        border-radius:999px;
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        color:#fff !important;
+        font-weight:700;
+        box-shadow:0 8px 18px rgba(37,99,235,0.35);
+        font-size:var(--fs-sm);
+      }
+
+      @media (max-width:900px){
+        .topbar-inner{
+          padding-inline:0;
+        }
+      }
+
+      /* Knapper (om du vil bruke dem senere) */
+      .btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:.4rem;
+        font-weight:700;
+        font-size: var(--fs-sm);
+        border-radius:999px;
+        padding:.6rem 1rem;
+        border:1px solid var(--line);
+        background:#fff;
+        color:var(--text);
+        cursor:pointer;
+        transition:.2s;
+      }
+      .btn:hover{ background:#f0f2f5 }
+      .btn-primary{
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        border:none;
+        color:#fff;
+        box-shadow:0 4px 12px rgba(14,165,233,.3);
+      }
+
+      /* Layout */
+      .hero{ padding: var(--s-4) 0 var(--s-5) }
+      .grid{ display:grid; grid-template-columns: 1fr; gap: var(--s-4) }
+      @media (min-width: 980px){
+        .grid{
+          grid-template-columns: 1.3fr 0.7fr; /* Pris-kolonne størst */
+          gap: var(--s-5);
+          align-items:stretch;
+        }
+      }
+
+      /* Kort generelt */
+      .card{
+        background:#fff;
+        border:1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Hero-kort: pris som hovedinfo */
+      .card-head{
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:var(--s-3);
+        padding: var(--s-4) var(--s-4) var(--s-3);
+      }
+      .title{ font-size: var(--fs-xl); font-weight:800 }
+      .chips{
+        display:flex;
+        gap:var(--s-2);
+        flex-wrap:wrap;
+        margin-top:var(--s-2);
+        justify-content: center;
+      }
+      .chip{
+        font-size: var(--fs-sm);
+        color:var(--muted);
+        border:1px solid var(--line);
+        background:#f7f9fb;
+        padding:.4rem .7rem;
+        border-radius:999px;
+      }
+      .flag{
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        color:#fff;
+        font-size: clamp(10px,.9vw,12px);
+        font-weight:800;
+        border-radius:999px;
+        padding:.5rem .75rem;
+        white-space:nowrap;
+      }
+
+      .card-body{
+        padding: 0 var(--s-4) var(--s-4);
+        display:flex;
+        flex-direction:column;
+        gap: var(--s-3);
+        flex: 1;
+      }
+
+      .intro-text{
+        font-size: var(--fs-sm);
+        color: var(--muted);
+      }
+
+      .bullets{
+        display:flex;
+        flex-wrap:wrap;
+        gap: var(--s-2) var(--s-3);
+        font-size: var(--fs-sm);
+        color: var(--muted);
+      }
+      .dot{
+        width:6px;
+        height:6px;
+        border-radius:999px;
+        background: var(--accent);
+        margin-top:.4rem;
+      }
+
+      /* Pris-bokser – hovedseksjon */
+      .price-group{
+        display:flex;
+        flex-direction:column;
+        gap: var(--s-2);
+        margin-top: var(--s-2);
+      }
+      #pricing{
+        scroll-margin-top: 100px;
+      }
+
+      .price-option{
+        padding: 1rem 1.1rem;
+        border: 1px solid #d7e6ec;
+        border-radius: 14px;
+        background: #f7fbfd;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap: var(--s-2);
+      }
+      .price-option:hover{
+        background:#e9f4ff;
+        border-color:#a9d1f0;
+        transform: translateY(-2px);
+      }
+      .price-option.active{
+        background: linear-gradient(90deg, #7b2ff7 0%, #4c9cff 100%);
+        color: #ffffff;
+        border-color: transparent;
+      }
+      .price-label{
+        display:flex;
+        flex-direction:column;
+        gap: 4px;
+      }
+      .price-size{
+        font-family:Sora,Manrope,sans-serif;
+        font-size: clamp(20px, 1.2vw + 0.8rem, 30px);
+        font-weight:800;
+      }
+      .price-note{
+        font-size: var(--fs-sm);
+        opacity:.9;
+      }
+
+      .order-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap: var(--s-2);
+        align-items:center;
+        margin-top: var(--s-3);
+      }
+      .order-btn{
+        flex:1 1 180px;
+        background: linear-gradient(90deg, #7b2ff7 0%, #4c9cff 100%);
+        color: white;
+        font-weight: 700;
+        padding: 0.9rem 1.4rem;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+        text-align:center;
+        font-size: var(--fs-sm);
+      }
+      .order-btn:hover{
+        transform: scale(1.03);
+        opacity: 0.9;
+      }
+      .price-hint{
+        font-size: var(--fs-sm);
+        color: var(--muted);
+      }
+
+      .note{
+        margin-top:6px;
+        color: var(--muted);
+        font-size: var(--fs-sm);
+      }
+
+      /* Sidepanel – visuelle eksempler (bilder) */
+      .side{
+        background:#fff;
+        border:1px solid var(--line);
+        border-radius: var(--radius);
+        padding: var(--s-4);
+        box-shadow: var(--shadow);
+        height: auto;
+      }
+      .side h3{
+        margin:0 0 var(--s-2);
+        font-size: var(--fs-lg);
+        font-weight:800;
+      }
+      .side p{
+        margin:0 0 var(--s-3);
+        color: var(--muted);
+        font-size: var(--fs-sm);
+      }
+
+      .viewer{
+        margin-top: var(--s-1);
+        border-radius: calc(var(--radius) - 6px);
+        background:#eef2f6;
+        padding: var(--s-2);
+        display:flex;
+        flex-direction:column;
+        gap: var(--s-2);
+      }
+
+      .preview{
+        background:#fff;
+        border-radius:12px;
+        border:1px solid var(--line);
+        overflow:hidden;
+        box-shadow: 0 4px 10px rgba(15,23,42,.08);
+      }
+      .preview img{
+        display:block;
+        width:100%;
+        height:auto;
+      }
+      .preview-label{
+        padding:.6rem .9rem;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        border-top:1px solid var(--line);
+        background:#f9fafc;
+      }
+
+      /* Footer */
+      footer{
+        border-top:1px solid var(--line);
+        color: var(--muted);
+        font-size: var(--fs-sm);
+        margin-top: var(--s-5);
+      }
+      .foot{
+        display:flex;
+        flex-wrap:wrap;
+        gap: var(--s-2);
+        align-items:center;
+        justify-content:space-between;
+        padding: var(--s-3) 0;
+      }
+
+      @media (prefers-reduced-motion: reduce){
+        *{transition:none !important; scroll-behavior:auto}
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOPBAR: identisk struktur som i bestill-skriptet -->
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="index.html" class="logo">
+          <span>Prop</span>Scan
+        </a>
+        <nav class="nav">
+          <a href="index.html">Hjem</a>
+          <a href="tjenester.html">Tjenester</a>
+          <a href="priser.html">Priser</a>
+          <a href="faq.html" class="active">FAQ</a>
+          <a href="bestill.html" class="nav-cta">Bestill</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container hero" id="home">
+      <div class="grid">
+        <!-- HOVEDKOLONNE: PRISER / PAKKER -->
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Interaktiv 3D-omvisning <span style="opacity:.6">+</span> Plantegning</div>
+              <div class="chips">
+                <span class="chip">Levert klart til FINN og Airbnb</span>
+                <span class="chip">Lenke du kan copy/paste hvor du vil</span>
+                <span class="chip">Perfekt for korttidsleie og firmahytter</span>
+              </div>
+            </div>
+            <div class="flag">Levering neste dag</div>
+          </div>
+
+          <div class="card-body">
+            <p class="intro-text">
+              Velg pakken som passer arealet ditt. Én skanning – ubegrenset bruk i hele leieperioden.
+            </p>
+
+            <div class="price-group" id="pricing">
+              <div class="price-option" data-size="0–60 m²">
+                <div class="price-label">
+                  <div class="price-size">0–60 m²</div>
+                  <div class="price-note">Typisk 1–2 roms leilighet</div>
+                </div>
+                <div class="price-note">fra 3 490 kr</div>
+              </div>
+
+              <div class="price-option" data-size="61–100 m²">
+                <div class="price-label">
+                  <div class="price-size">61–100 m²</div>
+                  <div class="price-note">Større leilighet / liten enebolig</div>
+                </div>
+                <div class="price-note">fra 4 490 kr</div>
+              </div>
+
+              <div class="price-option" data-size="100+ m²">
+                <div class="price-label">
+                  <div class="price-size">100+ m²</div>
+                  <div class="price-note">Store boliger eller næring</div>
+                </div>
+                <div class="price-note">Spør om pris</div>
+              </div>
+            </div>
+
+            <div class="order-row">
+              <button class="order-btn" id="orderBtn">Bestill skanning</button>
+              <div class="price-hint">
+                <strong>Usikker på areal?</strong> Vi hjelper deg å velge riktig pakke.
+                <div class="note">Reisekostnad kan påløpe utenfor bygrensen.</div>
+              </div>
+            </div>
+
+            <div class="bullets">
+              <span class="dot"></span><span>Copy/paste-lenke som kan bygges inn på FINN, Airbnb og egen nettside</span>
+              <span class="dot"></span><span>Nøyaktig målsatt plantegning (PDF/PNG/SVG)</span>
+              <span class="dot"></span><span>Ren visning uten fremmed branding</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- SIDEKOLONNE: VISUELT EKSEMPEL PÅ HVA DE FÅR -->
+        <aside class="side" id="services">
+          <h3>Hva du får</h3>
+          <p>
+            Hver skanning gir deg både en klikkbar 3D-omvisning og en klassisk plantegning.
+            Slik ser det ut for leietakerne dine:
+          </p>
+
+          <div class="viewer">
+            <div class="preview">
+              <video 
+                autoplay 
+                loop 
+                muted 
+                playsinline
+                style="width:100%; border-radius:12px;"
+              >
+                <source src="3dvisning-finn.mp4" type="video/mp4">
+              </video>
+
+              <div class="preview-label">
+                Eksempel: FINN-annonse med innebygd 3D-omvisning. Leietaker kan “gå rundt” i boligen hjemmefra.
+              </div>
+            </div>
+
+            <div class="preview">
+              <img src="floorplan.png" alt="Eksempel på plantegning som følger med skanningen" />
+              <div class="preview-label">
+                Eksempel: Målsatt plantegning med romnavn – klar til prospekt, Finn-annonse eller infoskriv.
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <footer>
+        <div class="foot">
+          <div>© <span id="year"></span> Propscan — Oslo, Norge</div>
+          <div><a href="#faq">FAQ</a> • <a href="#contact">Kontakt</a></div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      let selectedSize = null;
+
+      // Marker valgt prisboks
+      document.querySelectorAll('.price-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('.price-option').forEach(o => o.classList.remove('active'));
+          option.classList.add('active');
+          selectedSize = option.dataset.size;
+        });
+      });
+
+      // Bestill-knapp
+      document.getElementById('orderBtn').addEventListener('click', () => {
+        if (!selectedSize) {
+          alert('Velg et areal før du bestiller 😊');
+          return;
+        }
+
+        // Send videre til bestillingsside med areal som parameter
+        window.location.href = `bestill.html?size=${encodeURIComponent(selectedSize)}`;
+      });
+
+      // År i footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

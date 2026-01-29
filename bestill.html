@@ -1,0 +1,1830 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Propscan — Bestill</title>
+    <meta name="description" content="Bestill 3D-skanning og plantegning for utleieboliger, hytter og næring." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* Samme base som index/tjenester/priser/FAQ */
+      :root{
+        /* Farger */
+        --bg: #ffffff;
+        --panel: #f9fafc;
+        --line: rgba(0,0,0,.08);
+        --text: #111315;
+        --muted: #6e7480;
+        --accent: #0ea5e9;
+        --accent-2: #8b5cf6;
+        --accent-soft: #e0f7ff;
+        --accent-dark: #0284c7;
+
+        /* Typografi */
+        --fs-base: clamp(14px, 0.95vw + 0.55rem, 18px);
+        --fs-sm: clamp(12px, 0.45vw + 0.55rem, 14px);
+        --fs-md: clamp(13px, 0.6vw + 0.6rem, 16px);
+        --fs-lg: clamp(18px, 1.1vw + 0.6rem, 24px);
+        --fs-xl: clamp(22px, 1.4vw + 0.6rem, 32px);
+
+        /* Spacing */
+        --s-1: clamp(6px, 0.6vw, 12px);
+        --s-2: clamp(10px, 0.9vw, 16px);
+        --s-3: clamp(14px, 1.2vw, 22px);
+        --s-4: clamp(18px, 1.8vw, 28px);
+        --s-5: clamp(24px, 2.6vw, 44px);
+
+        /* Radius + skygge */
+        --radius: clamp(14px, 1.4vw, 22px);
+        --shadow: 0 6px 16px rgba(0,0,0,.08);
+
+        /* Containerbredde */
+        --container-w: min(98vw, 1600px);
+      }
+
+      *{box-sizing:border-box;margin:0;padding:0;}
+      html{ font-size: var(--fs-base); }
+      html,body{height:100%;}
+      body{
+        font-family:"Manrope",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        background:linear-gradient(180deg,#fff,#f3f5f8);
+        color:var(--text);
+        -webkit-font-smoothing:antialiased;
+        text-rendering:optimizeLegibility;
+      }
+
+      a{text-decoration:none;color:inherit;}
+
+      .container{
+        width: var(--container-w);
+        margin:0 auto;
+        padding:0 var(--s-2);
+      }
+
+      /* Top-meny – identisk med FAQ-siden */
+      .topbar{
+        position:sticky;
+        top:0;
+        z-index:20;
+        backdrop-filter:blur(16px);
+        background:rgba(244,247,251,0.9);
+        border-bottom:1px solid rgba(209,213,219,0.6);
+      }
+
+      .topbar-inner{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:var(--s-2);
+        padding:var(--s-2) var(--s-2);
+      }
+
+      .logo{
+        font-family:"Sora",system-ui,sans-serif;
+        font-weight:700;
+        letter-spacing:0.02em;
+        font-size:1.1rem;
+      }
+
+      .logo span{
+        font-weight:800;
+        color:var(--accent);
+      }
+
+      .nav{
+        display:flex;
+        align-items:center;
+        gap:var(--s-3);
+        font-size:0.95rem;
+      }
+
+      .nav a{
+        color:var(--muted);
+        font-weight:500;
+        padding:0.4rem 0.2rem;
+        border-radius:999px;
+        transition:color .18s ease, background .18s ease;
+      }
+
+      .nav a:hover{
+        color:var(--text);
+        background:rgba(255,255,255,0.6);
+      }
+
+      .nav a.active{
+        color:var(--accent-dark);
+        background:var(--accent-soft);
+      }
+
+      .nav-cta{
+        padding:0.45rem 0.9rem;
+        border-radius:999px;
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        color:#fff !important;
+        box-shadow:0 8px 18px rgba(37,99,235,0.35);
+        font-weight:700;
+        font-size:var(--fs-sm);
+      }
+
+      @media (max-width:900px){
+        .topbar-inner{
+          padding-inline:0;
+        }
+      }
+
+      main{
+        padding:var(--s-4) 0 var(--s-5);
+      }
+
+      /* --- NYTT BESTILLINGS-DESIGN --- */
+
+      .checkout-hero{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-3);
+        margin-bottom:var(--s-4);
+        max-width:70ch;
+      }
+
+      .eyebrow{
+        font-size:0.8rem;
+        text-transform:uppercase;
+        letter-spacing:0.16em;
+        color:var(--accent-dark);
+        font-weight:700;
+      }
+
+      h1{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-xl);
+      }
+
+      .intro-text{
+        color:var(--muted);
+        max-width:48rem;
+        line-height:1.5;
+        font-size:var(--fs-md);
+      }
+
+      .badge-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap:0.4rem;
+      }
+
+      .chip{
+        font-size:var(--fs-sm);
+        padding:0.25rem 0.7rem;
+        border-radius:999px;
+        background:var(--accent-soft);
+        color:var(--accent-dark);
+        border:1px solid rgba(14,165,233,0.18);
+        font-weight:500;
+      }
+
+      .step-bar{
+        display:flex;
+        flex-wrap:wrap;
+        gap:var(--s-2);
+        align-items:center;
+        margin-top:var(--s-2);
+      }
+
+      .step-pill{
+        display:flex;
+        align-items:center;
+        gap:0.4rem;
+        font-size:var(--fs-sm);
+        padding:0.35rem 0.8rem;
+        border-radius:999px;
+        background:#fff;
+        border:1px solid rgba(148,163,184,0.5);
+        box-shadow:0 4px 10px rgba(15,23,42,0.05);
+      }
+
+      .step-pill span.num{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        width:1.4rem;
+        height:1.4rem;
+        border-radius:999px;
+        background:var(--accent-soft);
+        color:var(--accent-dark);
+        font-weight:700;
+        font-size:0.75rem;
+      }
+
+      .step-pill span.label{
+        font-weight:500;
+      }
+
+      /* Layout for hovedkortet */
+
+      .checkout-layout{
+        display:grid;
+        grid-template-columns:minmax(0, 1.4fr) minmax(0, 1fr);
+        gap:var(--s-3);
+        align-items:flex-start;
+      }
+
+      @media (max-width:980px){
+        .checkout-layout{
+          grid-template-columns:1fr;
+        }
+      }
+
+      .card{
+        background:#fff;
+        border-radius:var(--radius);
+        border:1px solid var(--line);
+        box-shadow:var(--shadow);
+        padding:var(--s-3);
+      }
+
+      .card-title{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-lg);
+        margin-bottom:var(--s-2);
+      }
+
+      /* Skjema */
+
+      form{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-3);
+      }
+
+      .field-group{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-2);
+      }
+
+      .group-label{
+        font-size:var(--fs-sm);
+        font-weight:700;
+        color:var(--muted);
+        text-transform:uppercase;
+        letter-spacing:0.08em;
+      }
+
+      .field-row{
+        display:flex;
+        gap:var(--s-2);
+        flex-wrap:wrap;
+      }
+
+      .field{
+        flex:1 1 min(15rem,100%);
+        display:flex;
+        flex-direction:column;
+        gap:0.25rem;
+      }
+
+      label{
+        font-size:var(--fs-sm);
+        font-weight:600;
+        color:var(--muted);
+      }
+
+      .input, select, textarea{
+        border-radius:12px;
+        border:1px solid var(--line);
+        padding:0.5rem 0.75rem;
+        font:inherit;
+        background:#fff;
+        outline:none;
+        transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      }
+
+      .input:focus,
+      select:focus,
+      textarea:focus{
+        border-color:var(--accent-dark);
+        box-shadow:0 0 0 1px rgba(14,165,233,0.4);
+      }
+
+      textarea{
+        resize:vertical;
+        min-height:80px;
+      }
+
+      /* Pakkevalg – hovedkategorier (store menyer) */
+
+      .package-accordion{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-2);
+      }
+
+      .pkg-acc-item{
+        border-radius:var(--radius);
+        border:1px solid var(--line);
+        background:#fff;
+        overflow:hidden;
+      }
+
+      .pkg-acc-header{
+        width:100%;
+        text-align:left;
+        padding:var(--s-2);
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:var(--s-2);
+        background:#f9fafb;
+        border:none;
+        cursor:pointer;
+        font:inherit;
+      }
+
+      .pkg-acc-main{
+        display:flex;
+        flex-direction:column;
+        gap:0.15rem;
+      }
+
+      .pkg-acc-title{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-md);
+        font-weight:600;
+      }
+
+      .pkg-acc-sub{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .pkg-acc-chevron{
+        flex-shrink:0;
+        width:1.1rem;
+        height:1.1rem;
+        border-radius:999px;
+        border:1px solid rgba(148,163,184,0.7);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:0.7rem;
+        color:var(--muted);
+        transition:transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+      }
+
+      .pkg-acc-item.is-open .pkg-acc-header{
+        background:#fff;
+      }
+
+      .pkg-acc-item.is-open .pkg-acc-chevron{
+        transform:rotate(90deg);
+        background:var(--accent-soft);
+        color:var(--accent-dark);
+        border-color:var(--accent);
+      }
+
+      .pkg-acc-panel{
+        display:none;
+        padding:0 var(--s-2) var(--s-2);
+        border-top:1px solid rgba(226,232,240,0.8);
+      }
+
+      .pkg-acc-panel.is-open{
+        display:block;
+      }
+
+      /* Underkategorier – små menyer inni hver hovedkategori */
+
+      .service-list{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-1);
+        margin-top:var(--s-2);
+      }
+
+      .service-item{
+        border-radius:14px;
+        border:1px solid rgba(226,232,240,0.9);
+        background:#fff;
+        overflow:hidden;
+      }
+
+      .service-header{
+        width:100%;
+        text-align:left;
+        padding:0.65rem 0.9rem;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:var(--s-2);
+        border:none;
+        background:#f9fafb;
+        cursor:pointer;
+        font:inherit;
+      }
+
+      .service-main{
+        display:flex;
+        flex-direction:column;
+        gap:0.15rem;
+      }
+
+      .service-title{
+        font-size:var(--fs-sm);
+        font-weight:600;
+      }
+
+      .service-sub{
+        font-size:0.78rem;
+        color:var(--muted);
+      }
+
+      .service-meta{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-end;
+        gap:0.2rem;
+        font-size:0.8rem;
+      }
+
+      .service-price{
+        font-weight:600;
+      }
+
+      .service-status{
+        font-size:0.7rem;
+        padding:0.1rem 0.5rem;
+        border-radius:999px;
+        border:1px solid rgba(148,163,184,0.6);
+        color:var(--muted);
+        background:#fff;
+      }
+
+      .service-item.service-selected .service-status{
+        border-color:var(--accent);
+        background:var(--accent-soft);
+        color:var(--accent-dark);
+      }
+
+      .service-item.service-selected{
+        border-color:var(--accent-dark);
+        box-shadow:0 0 0 1px rgba(14,165,233,0.45);
+        background:var(--accent-soft);
+      }
+
+      .service-panel{
+        display:none;
+        padding:0.7rem 0.9rem 0.9rem;
+        font-size:0.8rem;
+        color:var(--muted);
+        background:#fff;
+      }
+
+      .service-panel p{
+        margin-bottom:0.6rem;
+        line-height:1.5;
+      }
+
+      .service-panel.is-open{
+        display:block;
+      }
+
+      .service-toggle{
+        border-radius:999px;
+        border:1px solid var(--accent-dark);
+        background:var(--accent-dark);
+        color:#fff;
+        font-size:0.8rem;
+        padding:0.3rem 0.9rem;
+        cursor:pointer;
+        font-weight:600;
+      }
+
+      .service-item.service-selected .service-toggle{
+        background:#fff;
+        color:var(--accent-dark);
+      }
+
+      .package-help-text{
+        margin-top:var(--s-2);
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      /* Vilkår og knapper */
+
+      .terms{
+        display:flex;
+        align-items:flex-start;
+        gap:0.45rem;
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .terms input{
+        margin-top:0.2rem;
+      }
+
+      .fine-print{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .btn-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap:var(--s-2);
+        align-items:center;
+      }
+
+      .btn-primary{
+        border:none;
+        border-radius:999px;
+        padding:0.6rem 1.6rem;
+        font-weight:700;
+        font-size:var(--fs-sm);
+        background:linear-gradient(135deg,var(--accent-2),var(--accent));
+        color:#fff;
+        cursor:pointer;
+        box-shadow:0 8px 18px rgba(37,99,235,0.35);
+      }
+
+      .btn-primary:hover{
+        filter:brightness(1.04);
+      }
+
+      .btn-ghost{
+        border-radius:999px;
+        padding:0.55rem 1.3rem;
+        border:1px solid var(--line);
+        font-size:var(--fs-sm);
+        background:#fff;
+        cursor:pointer;
+        color:var(--muted);
+      }
+
+      .btn-ghost:hover{
+        background:rgba(249,250,251,0.9);
+      }
+
+      /* Sidepanel */
+
+      .side-title{
+        font-family:"Sora",system-ui,sans-serif;
+        font-size:var(--fs-md);
+        margin-bottom:var(--s-1);
+      }
+
+      .side-section{
+        margin-bottom:var(--s-3);
+      }
+
+      .side-list{
+        list-style:none;
+        padding:0;
+        margin:0;
+        display:flex;
+        flex-direction:column;
+        gap:0.35rem;
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .side-list li::before{
+        content:"•";
+        margin-right:0.4rem;
+        color:var(--accent-dark);
+      }
+
+      .highlight-box{
+        margin-top:var(--s-2);
+        padding:var(--s-2);
+        border-radius:var(--radius);
+        background:var(--panel);
+        border:1px dashed rgba(148,163,184,0.7);
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .side-tag-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap:0.35rem;
+        margin-top:var(--s-1);
+      }
+
+      .side-tag{
+        font-size:0.75rem;
+        padding:0.15rem 0.55rem;
+        border-radius:999px;
+        background:#eef2ff;
+        color:#4f46e5;
+      }
+
+      /* Stack for høyre kolonne */
+      .side-stack{
+        display:flex;
+        flex-direction:column;
+        gap:var(--s-3);
+        height:100%;
+      }
+
+      .side-stack > .order-summary{
+        margin-top:auto;
+      }
+
+      /* --- NY: Bestillingsoppsummering --- */
+      .order-summary-list{
+        list-style:none;
+        padding:0;
+        margin:var(--s-1) 0 0 0;
+        display:flex;
+        flex-direction:column;
+        gap:0.45rem;
+        font-size:var(--fs-sm);
+      }
+
+      .summary-line{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:var(--s-1);
+        padding:0.45rem 0.6rem;
+        border-radius:10px;
+        background:var(--panel);
+      }
+
+      .summary-name{
+        font-weight:600;
+      }
+
+      .summary-price{
+        font-weight:600;
+        color:var(--accent-dark);
+        white-space:nowrap;
+        font-size:0.85rem;
+      }
+
+      .summary-empty{
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .summary-footer{
+        margin-top:var(--s-2);
+        font-size:var(--fs-sm);
+        color:var(--muted);
+      }
+
+      .summary-note{
+        margin-top:0.35rem;
+        line-height:1.4;
+      }
+
+      .summary-total-box{
+        margin-top: var(--s-3);
+        padding: calc(var(--s-3) * 0.9) var(--s-3);
+        border-radius: var(--radius);
+        background: linear-gradient(135deg, rgba(14,165,233,0.04), rgba(129,140,248,0.06));
+        border: 1px solid rgba(37,99,235,0.25);
+        box-shadow: 0 10px 24px rgba(15,23,42,0.08);
+      }
+
+      .summary-total-row{
+        display:flex;
+        align-items:baseline;
+        justify-content:space-between;
+        font-size: var(--fs-md);
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: var(--s-1);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .summary-total-row span:first-child{
+        opacity: 0.8;
+      }
+
+      .summary-total-amount{
+        font-size: clamp(1.6rem, 2.3vw, 2.1rem);
+        font-weight: 700;
+        color: var(--accent-dark);
+      }
+
+      .summary-small-print{
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        line-height:1.4;
+        margin-top: 0.35rem;
+      }
+
+      footer{
+        border-top:1px solid var(--line);
+        padding:var(--s-3) 0 var(--s-3);
+        font-size:var(--fs-sm);
+        color:var(--muted);
+        text-align:center;
+        margin-top:var(--s-5);
+      }
+
+      @media (prefers-reduced-motion: reduce){
+        *{transition:none !important; scroll-behavior:auto}
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- TOPBAR: identisk struktur som i bestill-skriptet -->
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="index.html" class="logo">
+          <span>Prop</span>Scan
+        </a>
+        <nav class="nav">
+          <a href="index.html">Hjem</a>
+          <a href="tjenester.html">Tjenester</a>
+          <a href="priser.html">Priser</a>
+          <a href="faq.html" class="active">FAQ</a>
+          <a href="bestill.html" class="nav-cta">Bestill</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Hero / intro -->
+      <section class="checkout-hero">
+        <div class="eyebrow">Bestilling</div>
+        <h1>Bestill 3D-skann til boligen eller hytta</h1>
+        <p class="intro-text">
+          Fyll inn noen enkle detaljer, så får du bekreftelse på tidspunkt og pris. Du betaler først når
+          3D-omvisningen (og plantegningen hvis valgt) er levert, med faktura på e-post.
+        </p>
+
+        <div class="badge-row">
+          <span class="chip">Ingen forhåndsbetaling</span>
+          <span class="chip">Faktura etter levering</span>
+          <span class="chip">Passer til FINN, Airbnb og egen nettside</span>
+        </div>
+
+        <div class="step-bar">
+          <div class="step-pill">
+            <span class="num">1</span>
+            <span class="label">Fyll inn bestilling</span>
+          </div>
+          <div class="step-pill">
+            <span class="num">2</span>
+            <span class="label">Du får bekreftelse og tidspunkt</span>
+          </div>
+          <div class="step-pill">
+            <span class="num">3</span>
+            <span class="label">Skanning, levering og faktura</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hovedkort: skjema + sidepanel -->
+      <section class="checkout-layout" id="kontakt">
+        <!-- Skjema -->
+        <section class="card">
+          <h2 class="card-title">Fullfør bestillingen</h2>
+
+          <form id="bestillingsskjema" method="POST" action="https://formspree.io/f/xwpgqrln">
+            <!-- Formspree meta + skjulte felter -->
+            <input type="hidden" name="_subject" value="Ny bestilling fra Propscan">
+            <input type="hidden" name="_language" value="no">
+            <input type="hidden" name="_redirect" value="https://propscan.no/takk.html">
+
+
+            <!-- Valgte tjenester som ID-liste (CSV) -->
+            <input type="hidden" name="pakke_valgt" id="pakke_valgt" value="">
+
+            <!-- Valgte tjenester som lesbar tekst -->
+            <input type="hidden" name="valgte_tjenester" id="hidden-tjenester">
+            <!-- Estimert totalpris fra sidepanelet -->
+            <input type="hidden" name="estimert_totalpris" id="hidden-totalpris">
+            <!-- Hvilken side bestillingen kom fra -->
+            <input type="hidden" name="side_url" id="hidden-url">
+
+            <!-- Pakker / tjenester -->
+            <div class="field-group">
+              <div class="group-label">Velg tjenester</div>
+
+              <div class="package-accordion">
+                <!-- BOLIG -->
+                <div class="pkg-acc-item is-open">
+                  <button type="button" class="pkg-acc-header" data-target="pakke-bolig">
+                    <div class="pkg-acc-main">
+                      <div class="pkg-acc-title">Bolig</div>
+                      <div class="pkg-acc-sub">Leiligheter, eneboliger, hytter og privat utleie.</div>
+                    </div>
+                    <div class="pkg-acc-chevron">&gt;</div>
+                  </button>
+                  <div class="pkg-acc-panel is-open" id="pakke-bolig">
+                    <div class="service-list">
+                      <!-- 1: 3D Omvisning & Plantegning-->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">3D Omvisning & Plantegning (Matterport)</div>
+                            <div class="service-sub">Full virtuell omvisning for FINN, Airbnb og egen nettside + 3 måneder hosting</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">4 990 – 9 990 kr</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Kjerneproduktet ditt – full 3D-omvisning som kan deles i annonser og på nettsider.
+                            Perfekt som grunnpakke for de fleste som skal leie ut eller selge.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bolig-3d-omvisning">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 2: HDR Bildepakke -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">HDR Mediepakke fra Matterport</div>
+                            <div class="service-sub">10–25 stillbilder hentet direkte fra skannet + Short Form Highlight Video fra scan</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">1 500 kr</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Få ferdige bilder til FINN og sosiale medier uten å bestille egen fotograf.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bolig-hdr-foto">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 3: Finn-optimalisering -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Finn.no-optimalisering</div>
+                            <div class="service-sub">Vi legger inn Matterport og bilder for deg.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">1 000 kr</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Du slipper å styre med opplasting og formatering – vi fikser annonsen for deg.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bolig-finn-optimalisering">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 4: Hosting -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Hosting / årlig oppbevaring</div>
+                            <div class="service-sub">12 mnd hosting av Matterport-turen.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">99–199 kr/mnd</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Vi sørger for at turen holder seg aktiv og tilgjengelig hele året.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bolig-hosting">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="package-help-text">
+                        Passer for utleieboliger, hytter og vanlige salgsobjekter.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- BUTIKK / KONTOR -->
+                <div class="pkg-acc-item">
+                  <button type="button" class="pkg-acc-header" data-target="pakke-butikk">
+                    <div class="pkg-acc-main">
+                      <div class="pkg-acc-title">Butikk / kontor</div>
+                      <div class="pkg-acc-sub">Butikker, salonger, treningssentre og kontorlokaler.</div>
+                    </div>
+                    <div class="pkg-acc-chevron">&gt;</div>
+                  </button>
+                  <div class="pkg-acc-panel" id="pakke-butikk">
+                    <div class="service-list">
+                      <!-- 1: 3D Omvisning for lokaler -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">3D Omvisning av lokaler</div>
+                            <div class="service-sub">Virtuell omvisning av butikk, kontor eller treningssenter.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            La kundene “gå gjennom” lokalet digitalt før de besøker fysisk – perfekt til nettside og Google.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="butikk-3d-omvisning">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 3: Google Street View -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Google Street View publisering</div>
+                            <div class="service-sub">Publisering av turen direkte til Google Maps.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Bedre synlighet i Google-søk og Maps når folk søker etter bedriften din.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="butikk-google-streetview">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 8: 360-bildepakke -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">360° bildepakke</div>
+                            <div class="service-sub">3–10 panoramabilder til nettside og sosiale medier.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Gir et interaktivt inntrykk av lokalet uten full 3D-tur.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="butikk-360-bildepakke">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 4: HDR Foto -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">HDR Foto fra Matterport</div>
+                            <div class="service-sub">Stillbilder av butikklokale / kontor.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Bilder du kan bruke på nettside, Google My Business og sosiale medier.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="butikk-hdr-foto">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 14: Brann- og rømningsplan -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Brann- og rømningsplan</div>
+                            <div class="service-sub">Planer basert på scan til oppslag i lokalet.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Oppdaterte og ryddige rømningsplaner som tilfredsstiller HMS-krav.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="butikk-brann-romningsplan">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 16: Hosting -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Hosting / årlig oppbevaring</div>
+                            <div class="service-sub">12 mnd lagring av bedrifts-tur.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">99–199 kr/mnd</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Sikrer at omvisningen alltid er tilgjengelig for kunder og samarbeidspartnere.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="butikk-hosting">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="package-help-text">
+                        Perfekt for butikker, salonger, treningssentre og kontorfellesskap.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- BYGGTEKNISK -->
+                <div class="pkg-acc-item">
+                  <button type="button" class="pkg-acc-header" data-target="pakke-bygg">
+                    <div class="pkg-acc-main">
+                      <div class="pkg-acc-title">Byggteknisk</div>
+                      <div class="pkg-acc-sub">For entreprenører, arkitekter, takstmenn og tekniske prosjekter.</div>
+                    </div>
+                    <div class="pkg-acc-chevron">&gt;</div>
+                  </button>
+                  <div class="pkg-acc-panel" id="pakke-bygg">
+                    <div class="service-list">
+                      <!-- 9: DWG Plantegning -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">DWG Plantegning (CAD)</div>
+                            <div class="service-sub">Teknisk plantegning i DWG-format til arkitekter.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Eksport av plantegninger i format som kan brukes rett inn i CAD/BIM-verktøy.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-dwg-plantegning">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 10: E57 Punkt-sky -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">E57 Punkt-sky</div>
+                            <div class="service-sub">3D-punktdata til BIM og prosjektering.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Høyoppløselig punkt-sky for videre teknisk modellering og analyser.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-e57-pointcloud">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 11: As-built -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">As-built dokumentasjon</div>
+                            <div class="service-sub">Detaljert “slik det faktisk ble bygget”.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Komplett statusdokumentasjon etter ferdigstillelse, til FDV og overlevering.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-asbuilt">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 12: Før–etter renovering -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Før–etter renovering</div>
+                            <div class="service-sub">To Matterport-turer før og etter tiltak.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Dokumenterer endringene visuelt og teknisk – nyttig for både entreprenør og kunde.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-for-etter-renovering">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 13: Forsikringsdokumentasjon -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Forsikringsdokumentasjon</div>
+                            <div class="service-sub">Detaljert dokumentasjon av skader.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Brukes ved skadesaker og tvister – gir alle parter et nøyaktig bilde av situasjonen.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-forsikringsdokumentasjon">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 14: Brann- og rømningsplan -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Brann- og rømningsplan</div>
+                            <div class="service-sub">Planer basert på scan til HMS/internkontroll.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Profesjonelle planer som kan henges opp i bygget og brukes i dokumentasjon.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-brann-romningsplan">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 15: Arealmåling NS 3940 -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Arealmåling iht. NS 3940</div>
+                            <div class="service-sub">Offisiell arealmåling til takst og prosjektering.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Sikrer korrekte arealtall etter gjeldende standard – viktig for takst og utbygging.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-arealmaling-ns3940">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 18: Rådata-eksport -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Rådata-eksport (OBJ/XYZ)</div>
+                            <div class="service-sub">Eksport av 3D-modeller og rådata.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">Forespør Pris</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            For utviklere og tekniske miljøer som vil jobbe videre med dataene selv.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-radata-eksport">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 16: Hosting -->
+                      <div class="service-item">
+                        <button type="button" class="service-header">
+                          <div class="service-main">
+                            <div class="service-title">Hosting / årlig oppbevaring</div>
+                            <div class="service-sub">Lagring av tekniske skann og prosjekt-turer.</div>
+                          </div>
+                          <div class="service-meta">
+                            <span class="service-price">99–199 kr/mnd</span>
+                            <span class="service-status">Ikke lagt til</span>
+                          </div>
+                        </button>
+                        <div class="service-panel">
+                          <p>
+                            Sørger for at alle tekniske skann er tilgjengelig i hele prosjektperioden.
+                          </p>
+                          <button type="button"
+                                  class="service-toggle"
+                                  data-service="bygg-hosting">
+                            Legg til i bestillingen
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="package-help-text">
+                        For entreprenører, arkitekter, takstmenn og tekniske prosjekter.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Adresse -->
+            <div class="field-group">
+              <div class="group-label">Adresse for skanning</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="adresse">Adresse</label>
+                  <input class="input" type="text" id="adresse" name="adresse" required />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="postnr">Postnummer</label>
+                  <input class="input" type="text" id="postnr" name="postnr" inputmode="numeric" />
+                </div>
+                <div class="field">
+                  <label for="sted">Sted</label>
+                  <input class="input" type="text" id="sted" name="sted" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Bolig / objekt -->
+            <div class="field-group">
+              <div class="group-label">Bolig / objekt</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="boligtype">Boligtype</label>
+                  <select class="input" id="boligtype" name="boligtype">
+                    <option>Leilighet</option>
+                    <option>Rekkehus / tomannsbolig</option>
+                    <option>Enebolig</option>
+                    <option>Hytte</option>
+                    <option>Næring / kontor</option>
+                    <option>Annet</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="areal">Ca. areal (m²)</label>
+                  <input class="input" type="number" id="areal" name="areal" min="0" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tidspunkt -->
+            <div class="field-group">
+              <div class="group-label">Tidspunkt</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="dato">Ønsket dato</label>
+                  <input class="input" type="date" id="dato" name="onsket_dato" />
+                </div>
+                <div class="field">
+                  <label for="tid">Tidspunkt / fleksibilitet</label>
+                  <input class="input" type="text" id="tid" name="tid"
+                         placeholder="F.eks. formiddag, ettermiddag, helg" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Kontaktinfo -->
+            <div class="field-group">
+              <div class="group-label">Kontaktinformasjon</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="navn">Navn</label>
+                  <input class="input" type="text" id="navn" name="navn" required />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="epost">E-post</label>
+                  <input class="input" type="email" id="epost" name="epost" required />
+                </div>
+                <div class="field">
+                  <label for="telefon">Telefon</label>
+                  <input class="input" type="tel" id="telefon" name="telefon" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tilleggsinfo -->
+            <div class="field-group">
+              <div class="group-label">Tilleggsinformasjon</div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="notat">Nøkkelinfo, parkering, portkode m.m.</label>
+                  <textarea class="input" id="notat" name="notat"
+                            placeholder=""></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vilkår -->
+            <div class="terms">
+              <input type="checkbox" id="vilkar" name="vilkar" required />
+              <label for="vilkar">
+                Jeg bekrefter bestilling av 3D-skann, og er innforstått med at det sendes faktura etter levering
+                med 7 dagers betalingsfrist. Avbestilling senere enn 24 timer før avtalt tid kan faktureres med kr 500,-.
+              </label>
+            </div>
+
+            <div class="fine-print">
+              Du får alltid en egen bekreftelse på e-post/SMS med endelig tidspunkt før vi kommer.
+            </div>
+
+            <div class="btn-row">
+              <button type="submit" class="btn-primary">Bekreft bestilling</button>
+              <button type="button" class="btn-ghost" onclick="window.location.href='tel:+4700000000';">
+                Spørsmål? Ring meg
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Høyre kolonne: info + din bestilling under -->
+        <div class="side-stack">
+          <!-- Sidepanel: info -->
+          <aside class="card">
+            <!-- Bestilling og trygghet -->
+            <div class="side-section">
+              <div class="side-title">Bestilling & trygghet</div>
+              <p>
+                Mange av våre profesjonelle tjenester har <strong>“Forespør pris”</strong>. Dette er helt uforpliktende — 
+                du binder deg ikke til noe før du eventuelt bekrefter et tilbud fra oss.
+              </p>
+              <p>
+                For boligpakker med faste priser gjelder: <strong>bestillingen er ikke bindende før vi har bekreftet tid med deg på telefon</strong>.
+                Du kan dermed trygt legge inn en forespørsel uten risiko.
+              </p>
+            </div>
+
+            <!-- Betaling og vilkår -->
+            <div class="side-section">
+              <div class="side-title">Betaling og vilkår</div>
+              <p>
+                Faktura sendes på e-post etter levering. <strong>Du betaler ingenting før jobben er levert</strong>. 
+                Normal betalingsfrist er 7 dager.
+              </p>
+              <div class="highlight-box">
+                <strong>Avbestilling</strong><br/>
+                Ved avbestilling senere enn 24 timer før avtalt tid kan et gebyr på kr 500,- faktureres.
+              </div>
+            </div>
+
+            <!-- Typiske priser -->
+            <div class="side-section">
+              <div class="side-title">Typiske priser</div>
+              <p>
+                De fleste boligoppdrag havner mellom <strong>kr 4 990–14 990,-</strong> inkl. mva, avhengig av størrelse 
+                og eventuelle tilleggstjenester som plantegning.
+              </p>
+              <div class="side-tag-row">
+                <span class="side-tag">Privat utleie</span>
+                <span class="side-tag">Næring</span>
+                <span class="side-tag">Firmahytter</span>
+                <span class="side-tag">Korttidsutleie</span>
+              </div>
+            </div>
+
+            <!-- Om oss / trygghet -->
+            <div class="side-section">
+              <div class="side-title">Hvorfor velge oss?</div>
+              <p>
+                Vi er et spesialisert selskap som jobber med én ting: profesjonell og presis visualisering for utleie, 
+                visning og dokumentasjon. Målet vårt er enkelt – <strong>fornøyde kunder hver eneste gang</strong>.
+              </p>
+              <p>
+                Trenger du råd før du bestiller? Ta gjerne kontakt – vi hjelper deg å finne riktig løsning for din bolig eller bedrift.
+              </p>
+            </div>
+          </aside>
+
+          <!-- Sidepanel: Din bestilling -->
+          <aside class="card order-summary">
+            <div class="side-section">
+              <div class="side-title">Din bestilling</div>
+              <p class="intro-text" style="font-size:var(--fs-sm); margin-bottom:var(--s-1);">
+                Her ser du en oversikt over tjenestene du har valgt. Dette er kun en uforpliktende forespørsel –
+                endelig pris og tidspunkt bekreftes alltid på telefon eller e-post.
+              </p>
+              <ul class="order-summary-list" id="order-summary-list">
+                <li class="summary-empty">
+                  Standard: 3D Omvisning &amp; Plantegning er lagt til. Du kan fjerne eller legge til flere tjenester til venstre.
+                </li>
+              </ul>
+              <div class="summary-footer">
+                <p class="summary-note">
+                  Tjenester markert med <strong>Forespør pris</strong> prises individuelt. Du binder deg ikke til noe
+                  før du har fått og godkjent et konkret tilbud.
+                </p>
+              </div>
+              <div class="summary-total-box">
+                <div class="summary-total-row">
+                  <span>Estimert Totalpris</span>
+                  <span id="order-total-price" class="summary-total-amount">—</span>
+                </div>
+
+                <p class="summary-small-print">
+                  Totalprisen er ett esimat og oppdateres automatisk basert på tjenestene du legger til.
+                  Tjenester merket med <strong>Forespør pris</strong> er ikke inkludert i totalsummen og prises individuelt.
+                </p>
+              </div>
+
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © 2025 Propscan. Alle rettigheter reservert.
+    </footer>
+
+    <script>
+      // --- Prisintervaller for totalen (fallback når areal ikke er satt) ---
+      const SERVICE_PRICE_RANGES = {
+        "bolig-3d-omvisning":        { min: 4990, max: 9990 },
+        "bolig-hdr-foto":            { min: 1500, max: 2000 },
+        "bolig-finn-optimalisering": { min:  500, max: 1000 },
+      };
+
+      // Accordion-logikk for hovedkategoriene
+      (function(){
+        var headers = document.querySelectorAll('.pkg-acc-header');
+
+        headers.forEach(function(header){
+          header.addEventListener('click', function(){
+            var targetId = header.getAttribute('data-target');
+            var panel = document.getElementById(targetId);
+            var item = header.closest('.pkg-acc-item');
+            var isOpen = item.classList.contains('is-open');
+
+            // Lukk alle
+            document.querySelectorAll('.pkg-acc-item').forEach(function(i){
+              i.classList.remove('is-open');
+            });
+            document.querySelectorAll('.pkg-acc-panel').forEach(function(p){
+              p.classList.remove('is-open');
+            });
+
+            // Åpne den som ble klikket (hvis den ikke allerede var åpen)
+            if(!isOpen){
+              item.classList.add('is-open');
+              if(panel){
+                panel.classList.add('is-open');
+              }
+            }
+          });
+        });
+      })();
+
+      // Accordion for hver underkategori (service)
+      (function(){
+        var serviceHeaders = document.querySelectorAll('.service-header');
+
+        serviceHeaders.forEach(function(header){
+          header.addEventListener('click', function(){
+            var item = header.closest('.service-item');
+            if(!item) return;
+            var panel = item.querySelector('.service-panel');
+            if(!panel) return;
+
+            panel.classList.toggle('is-open');
+            item.classList.toggle('is-open');
+          });
+        });
+      })();
+
+      // Valg av tjenester + "Din bestilling" + totalpris-intervall + areal-basert pris + Formspree-felter
+      (function(){
+        var formEl          = document.getElementById('bestillingsskjema');
+        var hiddenIds       = document.getElementById('pakke_valgt');
+        var hiddenTjenester = document.getElementById('hidden-tjenester');
+        var hiddenTotalpris = document.getElementById('hidden-totalpris');
+        var hiddenUrl       = document.getElementById('hidden-url');
+
+        var selected    = new Set();
+        var summaryList = document.getElementById('order-summary-list');
+        var totalEl     = document.getElementById('order-total-price');
+        var areaInput   = document.getElementById('areal');
+
+        // Pris-elementet for hovedproduktet (første service i bolig-lista)
+        var mainPriceEl = document.querySelector('#pakke-bolig .service-item .service-price');
+
+        function updateHiddenIds(){
+          if(hiddenIds){
+            hiddenIds.value = Array.from(selected).join(',');
+          }
+        }
+
+        function updateUI(serviceId){
+          var items = document.querySelectorAll('.service-item[data-service-id="'+serviceId+'"]');
+          items.forEach(function(item){
+            var status = item.querySelector('.service-status');
+            var btn    = item.querySelector('.service-toggle');
+            if(selected.has(serviceId)){
+              item.classList.add('service-selected');
+              if(status) status.textContent = 'Lagt til';
+              if(btn)    btn.textContent    = 'Fjern fra bestilling';
+            }else{
+              item.classList.remove('service-selected');
+              if(status) status.textContent = 'Ikke lagt til';
+              if(btn)    btn.textContent    = 'Legg til i bestillingen';
+            }
+          });
+        }
+
+        // Oppdater "Din bestilling"-boksen
+        function updateOrderSummary(){
+          if(!summaryList) return;
+
+          summaryList.innerHTML = '';
+
+          if(selected.size === 0){
+            var empty = document.createElement('li');
+            empty.className = 'summary-empty';
+            empty.textContent = 'Ingen tjenester er valgt enda. Velg en eller flere i listen til venstre.';
+            summaryList.appendChild(empty);
+            return;
+          }
+
+          selected.forEach(function(serviceId){
+            var item = document.querySelector('.service-item[data-service-id="'+serviceId+'"]');
+            if(!item) return;
+
+            var titleEl = item.querySelector('.service-title');
+            var priceEl = item.querySelector('.service-price');
+
+            var li = document.createElement('li');
+            li.className = 'summary-line';
+
+            var nameSpan = document.createElement('span');
+            nameSpan.className = 'summary-name';
+            nameSpan.textContent = titleEl ? titleEl.textContent.trim() : serviceId;
+
+            var priceSpan = document.createElement('span');
+            priceSpan.className = 'summary-price';
+            priceSpan.textContent = priceEl ? priceEl.textContent.trim() : '';
+
+            li.appendChild(nameSpan);
+            li.appendChild(priceSpan);
+
+            summaryList.appendChild(li);
+          });
+        }
+
+        // Hjelpefunksjon: få areal-basert pris (eller null for "Ta kontakt")
+        function getAreaBasedPrice(){
+          if(!areaInput) return null;
+          var value = parseFloat(areaInput.value);
+          if(isNaN(value) || value <= 0) return null;
+
+          if (value <= 50) {
+            return 4990;
+          } else if (value <= 100) {
+            return 7990;
+          } else if (value <= 150) {
+            return 9990;
+          } else {
+            // 150+ => "Ta kontakt", ingen konkret pris
+            return null;
+          }
+
+        }
+
+        // Oppdater labelen for hovedproduktet basert på areal
+        function updateMainPriceLabel(){
+          if(!mainPriceEl) return;
+
+          var value = parseFloat(areaInput ? areaInput.value : '');
+          if(isNaN(value) || value <= 0){
+            mainPriceEl.textContent = "4 990 – 9 990 kr";
+            return;
+          }
+
+          if (value <= 50){
+            mainPriceEl.textContent = "4 990 kr";
+          } else if (value <= 75){
+            mainPriceEl.textContent = "7 990 kr";
+          } else if (value <= 150){
+            mainPriceEl.textContent = "9 990 kr";
+          } else {
+            mainPriceEl.textContent = "Ta kontakt";
+          }
+        }
+
+        // Estimert totalpris (intervall) basert på SERVICE_PRICE_RANGES + areal
+        function updateTotalRange(){
+          if(!totalEl) return;
+
+          var minTotal = 0;
+          var maxTotal = 0;
+
+          selected.forEach(function(serviceId){
+            // Spesiallogikk for hovedproduktet med areal
+            if(serviceId === 'bolig-3d-omvisning'){
+              var areaPrice = getAreaBasedPrice();
+              if(areaPrice !== null){
+                minTotal += areaPrice;
+                maxTotal += areaPrice;
+                return; // hopp over fallback-range
+              }
+              // Hvis "Ta kontakt" eller ingen areal: fall through til range
+            }
+
+            var range = SERVICE_PRICE_RANGES[serviceId];
+            if(!range) return;
+
+            if(typeof range.min === 'number') minTotal += range.min;
+            if(typeof range.max === 'number') maxTotal += range.max;
+          });
+
+          if(minTotal === 0 && maxTotal === 0){
+            totalEl.textContent = '—';
+            return;
+          }
+
+          if(maxTotal === 0 || minTotal === maxTotal){
+            totalEl.textContent = minTotal.toLocaleString('no-NO') + ' kr';
+          }else{
+            totalEl.textContent =
+              minTotal.toLocaleString('no-NO') +
+              '–' +
+              maxTotal.toLocaleString('no-NO') +
+              ' kr';
+          }
+        }
+
+        // Koble til alle "Legg til i bestillingen"-knapper
+        var toggles = document.querySelectorAll('.service-toggle');
+        toggles.forEach(function(btn){
+          var serviceId = btn.getAttribute('data-service');
+          var item = btn.closest('.service-item');
+          if(item){
+            item.setAttribute('data-service-id', serviceId);
+          }
+
+          btn.addEventListener('click', function(e){
+            e.stopPropagation(); // ikke trigge header-accordion samtidig
+            if(selected.has(serviceId)){
+              selected.delete(serviceId);
+            }else{
+              selected.add(serviceId);
+            }
+            updateHiddenIds();
+            updateUI(serviceId);
+            updateOrderSummary();
+            updateTotalRange();
+          });
+        });
+
+        // Lytt på areal-feltet og oppdater pris + oppsummering + total
+        if(areaInput){
+          areaInput.addEventListener('input', function(){
+            updateMainPriceLabel();
+            // Hvis hovedproduktet er valgt, oppdater oppsummering + total
+            if(selected.has('bolig-3d-omvisning')){
+              updateOrderSummary();
+              updateTotalRange();
+            }else{
+              updateTotalRange();
+            }
+          });
+        }
+
+        // Før innsending til Formspree: fyll inn lesbar tjenesteliste, total og URL
+        if(formEl){
+          formEl.addEventListener('submit', function(){
+            // 1) Valgte tjenester som tekst (fra oppsummeringslista)
+            if(hiddenTjenester){
+              var tjenester = [];
+              if(summaryList){
+                var items = summaryList.querySelectorAll('li');
+                items.forEach(function(li){
+                  if(!li.classList.contains('summary-empty')){
+                    tjenester.push(li.innerText.trim());
+                  }
+                });
+              }
+              if(!tjenester.length){
+                hiddenTjenester.value = 'Ingen tjenester eksplisitt valgt (standard/avtales på telefon).';
+              }else{
+                hiddenTjenester.value = tjenester.join('\n');
+              }
+            }
+
+            // 2) Totalpris
+            if(hiddenTotalpris){
+              hiddenTotalpris.value = totalEl ? totalEl.textContent.trim() : '';
+            }
+
+            // 3) Side-URL
+            if(hiddenUrl){
+              hiddenUrl.value = window.location.href;
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

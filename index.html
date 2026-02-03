@@ -4,21 +4,27 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Propscan — Live Omvisning</title>
-    <meta name="description" content="Opplev realistiske 3D-omvisninger og plantegninger for utleieboliger." />
+    <meta
+      name="description"
+      content="Opplev realistiske 3D-omvisninger og plantegninger for utleieboliger."
+    />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
       /* =============================
          FLUID SKALERING
       ============================== */
-      :root{
+      :root {
         /* Farger */
         --bg: #ffffff;
         --panel: #f9fafc;
-        --line: rgba(0,0,0,.08);
+        --line: rgba(0, 0, 0, 0.08);
         --text: #111315;
         --muted: #6e7480;
         --accent: #0ea5e9;
@@ -42,316 +48,347 @@
 
         /* Radius + skygge */
         --radius: clamp(14px, 1.4vw, 22px);
-        --shadow: 0 6px 16px rgba(0,0,0,.08);
+        --shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 
         /* Containerbredde */
         --container-w: min(98vw, 1600px);
       }
 
-      *{box-sizing:border-box}
-      html{ font-size: var(--fs-base); }
-      html,body{ height:100% }
-      body{
-        margin:0;
-        font-family:Manrope, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        color:var(--text);
-        background:linear-gradient(180deg,#fff,#f3f5f8);
-        -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      * {
+        box-sizing: border-box;
       }
-      h1,h2,h3{font-family:Sora,Manrope,sans-serif}
-      a{text-decoration:none;color:inherit}
-      .container{ width: var(--container-w); margin: 0 auto; padding: var(--s-2); }
-
-      /* NY TOPPMENY (samme som priser/faq) */
-      .topbar{
-        position:sticky;
-        top:0;
-        z-index:20;
-        backdrop-filter:blur(16px);
-        background:rgba(244,247,251,0.9);
-        border-bottom:1px solid rgba(209,213,219,0.6);
+      html {
+        font-size: var(--fs-base);
       }
-
-      .topbar-inner{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:var(--s-2);
-        padding:var(--s-2) var(--s-2);
+      html,
+      body {
+        height: 100%;
       }
-
-      .logo{
-        font-family:"Sora",system-ui,sans-serif;
-        font-weight:700;
-        letter-spacing:0.02em;
-        font-size:1.1rem;
+      body {
+        margin: 0;
+        font-family: Manrope, system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+        color: var(--text);
+        background: linear-gradient(180deg, #fff, #f3f5f8);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: Sora, Manrope, sans-serif;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .container {
+        width: var(--container-w);
+        margin: 0 auto;
+        padding: var(--s-2);
       }
 
-      .logo span{
-        font-weight:800;
-        color:var(--accent);
+      /* TOPBAR */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(16px);
+        background: rgba(244, 247, 251, 0.9);
+        border-bottom: 1px solid rgba(209, 213, 219, 0.6);
       }
-
-      .nav{
-        display:flex;
-        align-items:center;
-        gap:var(--s-3);
-        font-size:0.95rem;
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s-2);
+        padding: var(--s-2) var(--s-2);
       }
-
-      .nav a{
-        color:var(--muted);
-        font-weight:500;
-        padding:0.4rem 0.2rem;
-        border-radius:999px;
-        transition:color .18s ease, background .18s ease;
+      .logo {
+        font-family: "Sora", system-ui, sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        font-size: 1.1rem;
       }
-
-      .nav a:hover{
-        color:var(--text);
-        background:rgba(255,255,255,0.6);
+      .logo span {
+        font-weight: 800;
+        color: var(--accent);
       }
-
-      .nav a.active{
-        color:var(--accent-dark);
-        background:var(--accent-soft);
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: var(--s-3);
+        font-size: 0.95rem;
       }
-
-      .nav-cta{
-        padding:0.45rem 0.9rem;
-        border-radius:999px;
-        background:linear-gradient(135deg,var(--accent-2),var(--accent));
-        color:#fff !important;
-        font-weight:700;
-        box-shadow:0 8px 18px rgba(37,99,235,0.35);
-        font-size:var(--fs-sm);
+      .nav a {
+        color: var(--muted);
+        font-weight: 500;
+        padding: 0.4rem 0.2rem;
+        border-radius: 999px;
+        transition: color 0.18s ease, background 0.18s ease;
       }
-
-      @media (max-width:900px){
-        .topbar-inner{
-          padding-inline:0;
+      .nav a:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.6);
+      }
+      .nav a.active {
+        color: var(--accent-dark);
+        background: var(--accent-soft);
+      }
+      .nav-cta {
+        padding: 0.45rem 0.9rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        color: #fff !important;
+        font-weight: 700;
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+        font-size: var(--fs-sm);
+      }
+      @media (max-width: 900px) {
+        .topbar-inner {
+          padding-inline: 0;
         }
       }
 
-      /* Knapper (brukes i hero osv.) */
-      .btn{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:.4rem;
-        font-weight:700;
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        font-weight: 700;
         font-size: var(--fs-sm);
-        border-radius:999px;
-        padding:.6rem 1rem;
-        border:1px solid var(--line);
-        background:#fff;
-        color:var(--text);
-        cursor:pointer;
-        transition:.2s;
+        border-radius: 999px;
+        padding: 0.6rem 1rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--text);
+        cursor: pointer;
+        transition: 0.2s;
       }
-      .btn:hover{ background:#f0f2f5 }
-      .btn-primary{
-        background:linear-gradient(135deg,var(--accent-2),var(--accent));
-        border:none;
-        color:#fff;
-        box-shadow:0 4px 12px rgba(14,165,233,.3);
+      .btn:hover {
+        background: #f0f2f5;
       }
-
-      /* Hero / layout */
-      .hero{ padding: var(--s-4) 0 var(--s-5) }
-      .grid{ display:grid; grid-template-columns: 1fr; gap: var(--s-4) }
-      @media (min-width: 980px){
-        .grid{ grid-template-columns: 1.4fr 0.6fr; gap: var(--s-5) }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        border: none;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
       }
 
-      /* Kort */
-      .card{
-        background:#fff;
-        border:1px solid var(--line);
+      /* Page spacing */
+      .hero {
+        padding: var(--s-4) 0 var(--s-5);
+      }
+
+      /* Card */
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
       }
-      .card-head{
-        display:flex;
-        align-items:start;
-        justify-content:space-between;
-        gap:var(--s-3);
+
+      /* Hero card header */
+      .card-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: var(--s-3);
         padding: var(--s-4) var(--s-4) 0 var(--s-4);
       }
-      .title{ font-size: var(--fs-xl); font-weight:800 }
-      .chips{
-        display:flex;
-        gap:var(--s-2);
-        flex-wrap:wrap;
-        margin-top:var(--s-2);
+      .title {
+        font-size: var(--fs-xl);
+        font-weight: 800;
+      }
+      .chips {
+        display: flex;
+        gap: var(--s-2);
+        flex-wrap: wrap;
+        margin-top: var(--s-2);
         justify-content: center;
       }
-      .chip{
+      .chip {
         font-size: var(--fs-sm);
-        color:var(--muted);
-        border:1px solid var(--line);
-        background:#f7f9fb;
-        padding:.4rem .7rem;
-        border-radius:999px;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        background: #f7f9fb;
+        padding: 0.4rem 0.7rem;
+        border-radius: 999px;
       }
-      .flag{
-        background:linear-gradient(135deg,var(--accent-2),var(--accent));
-        color:#fff;
-        font-size: clamp(10px,.9vw,12px);
-        font-weight:800;
-        border-radius:999px;
-        padding:.5rem .75rem;
-        white-space:nowrap;
+      .flag {
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        color: #fff;
+        font-size: clamp(10px, 0.9vw, 12px);
+        font-weight: 800;
+        border-radius: 999px;
+        padding: 0.5rem 0.75rem;
+        white-space: nowrap;
       }
 
-      .viewer{
-        position:relative;
+      /* Hero Matterport viewer (separate class so it won't be overwritten) */
+      .tour-viewer {
+        position: relative;
         margin: var(--s-3);
         border-radius: calc(var(--radius) - 6px);
-        overflow:hidden;
-        background:#eef2f6;
+        overflow: hidden;
+        background: #eef2f6;
         aspect-ratio: 16/9;
         height: clamp(260px, 70vh, 760px);
       }
-      @media (min-width: 980px){
-        .viewer{
+      @media (min-width: 980px) {
+        .tour-viewer {
           height: clamp(360px, 72vh, 760px);
-          aspect-ratio:auto;
+          aspect-ratio: auto;
         }
       }
-      iframe{
-        position:absolute;
-        inset:0;
-        width:100%;
-        height:100%;
-        border:0;
+      iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
       }
 
-      .card-foot{
-        display:grid;
+      .card-foot {
+        display: grid;
         gap: var(--s-3);
         padding: 0 var(--s-4) var(--s-4);
       }
-      @media (min-width: 720px){
-        .card-foot{
-          grid-template-columns:1fr auto;
-          align-items:center;
+      @media (min-width: 720px) {
+        .card-foot {
+          grid-template-columns: 1fr auto;
+          align-items: center;
         }
       }
-      .bullets{
-        display:flex;
-        flex-wrap:wrap;
+      .bullets {
+        display: flex;
+        flex-wrap: wrap;
         gap: var(--s-2) var(--s-3);
         font-size: var(--fs-sm);
         color: var(--muted);
       }
-      .dot{
-        width:6px;
-        height:6px;
-        border-radius:999px;
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
         background: var(--accent);
-        margin-top:.4rem;
+        margin-top: 0.4rem;
       }
 
-      /* Side / generelt (kan brukes senere) */
-      .side{
-        background:#fff;
-        border:1px solid var(--line);
+      /* Generic side card */
+      .side {
+        background: #fff;
+        border: 1px solid var(--line);
         border-radius: var(--radius);
         padding: var(--s-4);
         box-shadow: var(--shadow);
+        height: 100%;
       }
-      .side h3{ margin:0 0 var(--s-2); font-size: var(--fs-lg); font-weight:800 }
-      .side p{ margin:0; color: var(--muted); font-size: var(--fs-sm) }
-      .list{
-        list-style:none;
-        margin: var(--s-3) 0 0;
-        padding:0;
-        display:grid;
-        gap: var(--s-2);
+      .side h3 {
+        margin: 0 0 var(--s-2);
+        font-size: var(--fs-lg);
+        font-weight: 800;
       }
-      .tag{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        min-width:44px;
-        height:26px;
-        padding:0 10px;
-        border-radius:10px;
-        background:#f7f9fb;
-        border:1px solid var(--line);
-        color:var(--text);
-        font-weight:800;
+      .side p {
+        margin: 0 0 var(--s-3);
+        color: var(--muted);
         font-size: var(--fs-sm);
       }
 
-      .note{ margin-top:6px; color: var(--muted); font-size: var(--fs-sm) }
-
-      /* Input */
-      .input{
-        width:100%;
-        padding:.8rem 1rem;
-        border-radius:12px;
-        border:1px solid var(--line);
-        background:#f9fafc;
-        color:var(--text);
-        font-size:var(--fs-sm);
+      /* Previews inside the side panel */
+      .media-stack {
+        margin-top: var(--s-1);
+        border-radius: calc(var(--radius) - 6px);
+        background: #eef2f6;
+        padding: var(--s-2);
+        display: flex;
+        flex-direction: column;
+        gap: var(--s-2);
+      }
+      .preview {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+      }
+      .preview img,
+      .preview video {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .preview-label {
+        padding: 0.6rem 0.9rem;
+        font-size: var(--fs-sm);
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+        background: #f9fafc;
       }
 
-      /* Call-to-action knapp (forside + skjema) */
-      .order-btn{
-        margin-top:var(--s-2);
-        width:100%;
-        background:linear-gradient(135deg,var(--accent-2),var(--accent));
-        color:#fff;
-        font-weight:700;
-        padding:0.95rem 1.2rem;
-        border:none;
-        border-radius:999px;
-        cursor:pointer;
-        font-size:var(--fs-sm);
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:.4rem;
-        box-shadow:0 8px 20px rgba(14,165,233,.35);
-        transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+      /* === THE LAYOUT YOU WANT: 2 stacked + 1 to the right === */
+      .three-widgets {
+        margin-top: var(--s-5);
+        display: grid;
+        gap: var(--s-3);
       }
-      .order-btn:hover{
-        transform:translateY(-1px);
-        opacity:0.95;
-        box-shadow:0 10px 26px rgba(37,99,235,.4);
+
+      .three-widgets h2 {
+        font-size: var(--fs-lg);
+        margin: 0 0 var(--s-3);
+      }
+
+      .triple-layout {
+        display: grid;
+        gap: var(--s-5);
+      }
+
+      .left-stack {
+        display: grid;
+        gap: var(--s-4);
+      }
+
+      @media (min-width: 980px) {
+        .triple-layout {
+          grid-template-columns: 1.4fr 0.6fr;
+          align-items: stretch;
+        }
+        .left-stack {
+          grid-template-rows: 1fr 1fr;
+        }
       }
 
       /* Footer */
-      footer{
-        border-top:1px solid var(--line);
+      footer {
+        border-top: 1px solid var(--line);
         color: var(--muted);
         font-size: var(--fs-sm);
         margin-top: var(--s-5);
       }
-      .foot{
-        display:flex;
-        flex-wrap:wrap;
+      .foot {
+        display: flex;
+        flex-wrap: wrap;
         gap: var(--s-2);
-        align-items:center;
-        justify-content:space-between;
+        align-items: center;
+        justify-content: space-between;
         padding: var(--s-3) 0;
       }
 
-      /* Mindre animasjoner ved behov */
-      @media (prefers-reduced-motion: reduce){
-        *{transition:none !important; scroll-behavior:auto}
+      /* Reduce motion */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          scroll-behavior: auto;
+        }
       }
     </style>
   </head>
+
   <body>
-    <!-- TOPBAR: identisk struktur som i bestill-skriptet -->
     <header class="topbar">
       <div class="container topbar-inner">
-        <a href="index.html" class="logo">
-          <span>Prop</span>Scan
-        </a>
+        <a href="index.html" class="logo"> <span>Prop</span>Scan </a>
         <nav class="nav">
           <a href="index.html">Hjem</a>
           <a href="tjenester.html">Tjenester</a>
@@ -363,6 +400,7 @@
     </header>
 
     <main class="container hero">
+      <!-- HERO / DEMO -->
       <section class="card" id="home">
         <div class="card-head">
           <div>
@@ -376,8 +414,7 @@
           <div class="flag">For utleiere og meglere</div>
         </div>
 
-        <div class="viewer">
-          <!-- Demo-tur -->
+        <div class="tour-viewer">
           <iframe
             src="https://my.matterport.com/show/?m=ReKKmbfowSX&mls=1&play=1&brand=0&help=0&qs=1&title=0&tourcta=0&dh=1"
             allowfullscreen
@@ -386,74 +423,116 @@
 
         <div class="card-foot">
           <div class="bullets">
-            <span class="dot"></span><span>Flere får oversikt – færre unødige visninger</span>
-            <span class="dot"></span><span>Profesjonell presentasjon for FINN, Airbnb og bedriftssider</span>
-            <span class="dot"></span><span>Skanning én gang – bruk så mye du vil</span>
+            <span class="dot"></span
+            ><span>Flere får oversikt – færre unødige visninger</span>
+            <span class="dot"></span
+            ><span>Profesjonell presentasjon for FINN, Airbnb og bedriftssider</span>
+            <span class="dot"></span
+            ><span>Skanning én gang – bruk så mye du vil</span>
           </div>
-          <div class="btn-row" style="display:flex;gap:var(--s-2);flex-wrap:wrap">
+          <div
+            class="btn-row"
+            style="display:flex;gap:var(--s-2);flex-wrap:wrap"
+          >
             <a class="btn btn-primary" href="#contact">Få uforpliktende pristilbud</a>
             <a class="btn" href="tjenester.html">Se detaljert tjeneste</a>
           </div>
         </div>
       </section>
 
-      <!-- Tjenester-oversikt -->
-      <section id="services" style="margin-top:var(--s-5);display:grid;gap:var(--s-3)">
-        <h2 style="font-size:var(--fs-lg);margin:0 0 var(--s-3)">Tjenester</h2>
+      <!-- === 3 WIDGETS AREA (the one you asked about) === -->
+      <section class="three-widgets" id="services">
+        <h2>Tjenester</h2>
 
-        <div class="grid">
-          <!-- Kort for 3D-omvisning -->
-          <article class="card" style="padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3)">
-            <h3 style="margin:0;font-size:var(--fs-md);font-weight:800">3D-omvisning + plantegning</h3>
-            <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
-              Komplett virtuell omvisning med målsatt plantegning. Perfekt for utleieboliger, hytter og næring.
-            </p>
-            <ul style="margin:0;padding-left:1.1rem;color:var(--muted);font-size:var(--fs-sm);display:grid;gap:.25rem">
-              <li>Interaktiv 3D-tur på nett og mobil</li>
-              <li>Plantegning i PDF/PNG/SVG</li>
-              <li>Klar til bruk på FINN, Airbnb m.m.</li>
-            </ul>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s-2);margin-top:auto">
-              <span style="font-size:var(--fs-sm);color:var(--muted)">Fra ca. 3 490 kr ink. mva</span>
-              <a href="tjenester.html" class="btn">Les mer</a>
-            </div>
-          </article>
+        <div class="triple-layout">
+          <!-- LEFT: 2 stacked -->
+          <div class="left-stack">
+            <!-- Widget 1 -->
+            <article
+              class="card"
+              style="padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3)"
+            >
+              <h3 style="margin:0;font-size:var(--fs-md);font-weight:800">
+                3D-omvisning + plantegning
+              </h3>
+              <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
+                Komplett virtuell omvisning med målsatt plantegning. Perfekt for
+                utleieboliger, hytter og næring.
+              </p>
+              <ul
+                style="margin:0;padding-left:1.1rem;color:var(--muted);font-size:var(--fs-sm);display:grid;gap:.25rem"
+              >
+                <li>Interaktiv 3D-tur på nett og mobil</li>
+                <li>Plantegning i PDF/PNG/SVG</li>
+                <li>Klar til bruk på FINN, Airbnb m.m.</li>
+              </ul>
+              <div
+                style="display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s-2);margin-top:auto"
+              >
+                <span style="font-size:var(--fs-sm);color:var(--muted)"
+                  >Fra ca. 3 490 kr ink. mva</span
+                >
+                <a href="tjenester.html" class="btn">Les mer</a>
+              </div>
+            </article>
 
-          <!-- Placeholder for flere tjenester -->
-          <article class="card" style="padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);opacity:.7">
-            <h3 style="margin:0;font-size:var(--fs-md);font-weight:800">
-              Arealberegning &nbsp;<span style="font-weight:500;color:var(--muted)">Kommer</span>
-            </h3>
-            <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
-              Arealberegning iht. NS 3940:2023 for profesjonelle aktører. Dokumentasjon som kan brukes i prospekter.
-            </p>
-            <div style="margin-top:auto;font-size:var(--fs-sm);color:var(--muted)">
-              Ta kontakt hvis du vil stå på venteliste.
-            </div>
-          </article>
-        </div>
-      </section>
+            <!-- Widget 2 -->
+            <section class="card" id="how" style="padding:var(--s-4);display:grid;gap:var(--s-3)">
+              <h3 style="margin:0;font-size:var(--fs-md);font-weight:800">
+                Slik fungerer det
+              </h3>
 
-      <!-- Hvordan det fungerer -->
-      <section id="how" style="margin-top:var(--s-5);display:grid;gap:var(--s-3)">
-        <h2 style="font-size:var(--fs-lg);margin:0 0 var(--s-3)">Slik fungerer det</h2>
-        <div class="grid">
-          <div class="card" style="padding:var(--s-4);display:grid;gap:var(--s-3)">
-            <div style="font-weight:700;font-size:var(--fs-md)">1. Bestill skanning</div>
-            <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
-              Du sender adresse, ønsket dato og ca. størrelse. Vi bekrefter tid og pris.
-            </p>
-            <div style="font-weight:700;font-size:var(--fs-md)">2. Vi skanner</div>
-            <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
-              Vi kommer på befaring, skanner eiendommen og lager 3D-tur og plantegning.
-            </p>
-            <div style="font-weight:700;font-size:var(--fs-md)">3. Del lenken</div>
-            <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
-              Du får en enkel lenke du kan lime inn på FINN, Airbnb eller egen nettside – klar til bruk.
-            </p>
+              <div style="display:grid;gap:var(--s-3)">
+                <div style="font-weight:700;font-size:var(--fs-md)">1. Bestill skanning</div>
+                <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
+                  Du sender adresse, ønsket dato og ca. størrelse. Vi bekrefter tid og pris.
+                </p>
+
+                <div style="font-weight:700;font-size:var(--fs-md)">2. Vi skanner</div>
+                <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
+                  Vi kommer på befaring, skanner eiendommen og lager 3D-tur og plantegning.
+                </p>
+
+                <div style="font-weight:700;font-size:var(--fs-md)">3. Del lenken</div>
+                <p style="margin:0;color:var(--muted);font-size:var(--fs-sm)">
+                  Du får en enkel lenke du kan lime inn på FINN, Airbnb eller egen nettside – klar til bruk.
+                </p>
+              </div>
+            </section>
           </div>
 
+          <!-- RIGHT: Widget 3 -->
+          <aside class="side" aria-label="Hva du får">
+            <h3>Hva du får</h3>
+            <p>
+              Hver skanning gir deg både en klikkbar 3D-omvisning og en klassisk plantegning.
+              Slik ser det ut for leietakerne dine:
+            </p>
 
+            <div class="media-stack">
+              <div class="preview">
+                <video autoplay loop muted playsinline>
+                  <source src="3dvisning-finn.mp4" type="video/mp4" />
+                </video>
+                <div class="preview-label">
+                  Eksempel: FINN-annonse med innebygd 3D-omvisning. Leietaker kan “gå rundt”
+                  i boligen hjemmefra.
+                </div>
+              </div>
+
+              <div class="preview">
+                <img
+                  src="floorplan.png"
+                  alt="Eksempel på plantegning som følger med skanningen"
+                />
+                <div class="preview-label">
+                  Eksempel: Målsatt plantegning med romnavn – klar til prospekt, Finn-annonse
+                  eller infoskriv.
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
       </section>
 
       <footer>
@@ -465,8 +544,7 @@
     </main>
 
     <script>
-      // År i footer
-      document.getElementById('year').textContent = new Date().getFullYear();
+      document.getElementById("year").textContent = new Date().getFullYear();
     </script>
   </body>
 </html>
